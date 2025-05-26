@@ -201,7 +201,10 @@ EXPORT_SYMBOL(ring_buf_get);
 EXPORT_SYMBOL(ring_buf_peek);
 EXPORT_SYMBOL(ring_buf_put);
 #endif
+
 EXPORT_SYMBOL(sys_clock_cycle_get_32);
+
+#if defined(CONFIG_ARM_MPU)
 FORCE_EXPORT_SYM(__aeabi_dcmpun);
 FORCE_EXPORT_SYM(__aeabi_dcmple);
 FORCE_EXPORT_SYM(__aeabi_d2lz);
@@ -230,3 +233,6 @@ FORCE_EXPORT_SYM(__aeabi_ldivmod);
 FORCE_EXPORT_SYM(__aeabi_ul2f);
 FORCE_EXPORT_SYM(__aeabi_dcmpge);
 FORCE_EXPORT_SYM(__cxa_pure_virtual);
+#endif
+
+// Add exports for each riscv isa extension

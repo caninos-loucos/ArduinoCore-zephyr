@@ -9,10 +9,8 @@ config ARDUINO_API
 	imply CPP
 	imply GPIO
 	imply I2C
-	imply NEWLIB_LIBC_FLOAT_PRINTF
 	imply CBPRINTF_FP_SUPPORT
 	imply RING_BUFFER
-	select UART_INTERRUPT_DRIVEN
 	default n
 
 if ARDUINO_API

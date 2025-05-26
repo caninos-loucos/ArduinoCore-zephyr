@@ -1,5 +1,7 @@
+#if defined(CONFIG_ARM_MPU)
 #include <cmsis_core.h>
 #include <zephyr/init.h>
+
 int disable_mpu_rasr_xn(void)
 {
 	uint32_t index;
@@ -20,6 +22,7 @@ int disable_mpu_rasr_xn(void)
 	}
 	return 0;
 }
+#endif
 
 #if defined(CONFIG_BOARD_ARDUINO_NANO_33_BLE)
 int disable_bootloader_mpu() {

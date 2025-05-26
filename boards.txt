@@ -564,3 +564,17 @@ opta.debug.cortex-debug.custom.request=attach
 opta.debug.svd_file={runtime.platform.path}/svd/STM32H747_CM7.svd
 
 ##############################################################################################################
+
+puppy.name=puppy-testboard
+puppy.build.core=arduino
+puppy.build.board=puppy-testboard
+puppy.build.zephyr_target=puppy-testboard
+puppy.build.variant=puppy-testboard
+
+puppy.build.crossprefix=riscv64-zephyr-elf-
+puppy.build.compiler_path={runtime.tools.riscv64-zephyr-elf.path}/bin/
+
+puppy.build.extra_flags=-Oz
+puppy.build.postbuild.cmd="{tools.imgtool.path}/{tools.imgtool.cmd}" exit
+puppy.build.architecture=rv32imc_zicsr
+puppy.compiler.zephyr=

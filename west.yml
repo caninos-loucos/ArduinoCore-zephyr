@@ -20,8 +20,10 @@ manifest:
 
   projects:
     - name: zephyr
-      remote: arduino
-      revision: zephyr-arduino-20250520
+      remote: zephyrproject-rtos
+      revision: main
+      #remote: arduino
+      #revision: arduino_core_merge_post_4.1
       import:
         name-allowlist:
           - cmsis

@@ -67,8 +67,7 @@ fi
 # Build the loader
 BUILD_DIR=build/${variant}
 VARIANT_DIR=variants/${variant}
-rm -rf ${BUILD_DIR}
-west build -d ${BUILD_DIR} -b ${target} loader -t llext-edk ${args}
+west build -p -d ${BUILD_DIR} -b ${target} loader -t llext-edk ${args}
 
 # Extract the generated EDK tarball and copy it to the variant directory
 mkdir -p ${VARIANT_DIR} firmwares
