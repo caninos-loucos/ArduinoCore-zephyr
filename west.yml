@@ -9,6 +9,8 @@ manifest:
     path: modules/lib/ArduinoCore-zephyr
 
   remotes:
+    - name: caninos
+      url-base: https://github.com/anacforcelli
     - name: zephyrproject-rtos
       url-base: https://github.com/zephyrproject-rtos
     - name: arduino
@@ -20,10 +22,8 @@ manifest:
 
   projects:
     - name: zephyr
-      remote: zephyrproject-rtos
+      remote: caninos
       revision: main
-      #remote: arduino
-      #revision: arduino_core_merge_post_4.1
       import:
         name-allowlist:
           - cmsis
