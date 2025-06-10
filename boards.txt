@@ -572,9 +572,20 @@ puppy.build.zephyr_target=puppy-testboard
 puppy.build.variant=puppy-testboard
 
 puppy.build.crossprefix=riscv64-zephyr-elf-
-puppy.build.compiler_path={runtime.tools.riscv64-zephyr-elf.path}/bin/
-
-puppy.build.extra_flags=-Oz
-puppy.build.postbuild.cmd="{tools.imgtool.path}/{tools.imgtool.cmd}" exit
-puppy.build.architecture=rv32imc_zicsr
+puppy.build.compiler_path=/home/ana/zephyr-sdk-0.17.0/riscv64-zephyr-elf/bin/
 puppy.compiler.zephyr=
+
+puppy.build.postbuild.cmd="{tools.imgtool.path}/{tools.imgtool.cmd}" exit
+puppy.build.architecture=rv32imfc_zicsr
+puppy.build.mcu=rv32imfc_zicsr
+
+puppy.upload.address=0xf0000
+puppy.upload.maximum_size=983040
+
+puppy.bootloader.tool=dfu-util
+puppy.bootloader.tool.default=dfu-util
+puppy.bootloader.vid=0x2341
+puppy.bootloader.pid=0x0364
+puppy.bootloader.interface=0
+puppy.bootloader.file=zephyr-{build.variant}.bin
+puppy.bootloader.address=0x0

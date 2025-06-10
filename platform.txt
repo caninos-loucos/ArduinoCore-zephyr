@@ -3,8 +3,8 @@
 # For more info:
 # https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5---3rd-party-Hardware-specification
 
-name=Arduino Zephyr Boards (llext)
-version=9.9.9
+name=Arduino Zephyr Boards Puppy
+version=0.1
 
 # Compile variables
 # ------------------------
@@ -23,7 +23,7 @@ compiler.c.elf.flags={build.llext_link_flags} -Wl,--gc-sections -mcpu={build.mcu
 compiler.S.cmd={build.crossprefix}g++
 compiler.S.flags=-c -x assembler-with-cpp -mcpu={build.mcu} {build.fpu}
 compiler.cpp.cmd={build.crossprefix}g++
-compiler.cpp.flags=-g -Os -std=c++17 -c {compiler.warning_flags} {compiler.zephyr.macros} "@{compiler.zephyr.cxxflags_file}" {compiler.zephyr.common_ldflags} {compiler.zephyr.extra_ldflags} {compiler.zephyr.common_cxxflags} {compiler.zephyr.extra_cxxflags} {compiler.zephyr.arch.define} -MMD -mcpu={build.mcu} {build.float-abi} {build.fpu}
+compiler.cpp.flags=-v -g -Oz -std=c++17 -c {compiler.warning_flags} {compiler.zephyr.macros} "@{compiler.zephyr.cxxflags_file}" {compiler.zephyr.common_ldflags} {compiler.zephyr.extra_ldflags} {compiler.zephyr.common_cxxflags} {compiler.zephyr.extra_cxxflags} {compiler.zephyr.arch.define} -MMD -mcpu={build.mcu} {build.float-abi} {build.fpu}
 compiler.ar.cmd={build.crossprefix}ar
 compiler.ar.flags=rcs
 compiler.objcopy.cmd=
