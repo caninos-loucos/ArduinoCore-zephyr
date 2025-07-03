@@ -569,10 +569,11 @@ puppy.name=puppy-testboard
 puppy.build.core=arduino
 puppy.build.board=puppy-testboard
 puppy.build.zephyr_target=puppy-testboard
+puppy.build.zephyr_hals=
 puppy.build.variant=puppy-testboard
 
 puppy.build.crossprefix=riscv64-zephyr-elf-
-puppy.build.compiler_path=/home/ana/zephyr-sdk-0.17.0/riscv64-zephyr-elf/bin/
+puppy.build.compiler_path=/home/matheus/zephyr-sdk-0.17.0/riscv64-zephyr-elf/bin/
 puppy.compiler.zephyr=
 
 puppy.build.postbuild.cmd="{tools.imgtool.path}/{tools.imgtool.cmd}" exit
