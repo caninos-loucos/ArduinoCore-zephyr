@@ -573,8 +573,10 @@ puppy.build.zephyr_hals=
 puppy.build.variant=puppy-testboard
 
 puppy.build.crossprefix=riscv64-zephyr-elf-
-puppy.build.compiler_path=/home/matheus/zephyr-sdk-0.17.0/riscv64-zephyr-elf/bin/
+puppy.build.compiler_path=/home/glhrm/zephyr-sdk-0.17.0/riscv64-zephyr-elf/bin/
 puppy.compiler.zephyr=
+puppy.compiler.zephyr.arch.define=-DRV_ISA_RV32
+puppy.runtime.tools.zephyr-sketch-tool.path=/home/glhrm/Trabalho/arduino-puppy/ArduinoCore-zephyr/extra/zephyr-sketch-tool
 
 puppy.build.postbuild.cmd="{tools.imgtool.path}/{tools.imgtool.cmd}" exit
 puppy.build.architecture=rv32imfc_zicsr
