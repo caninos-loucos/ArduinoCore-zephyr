@@ -113,9 +113,12 @@ The most important components of this project are:
 
 ## 🛠️ Setup a Zephyr build environment
 
+> [!WARNING]  
+> If you checked out this repo before 0.3.2 was released, delete your local copy and clone the repository again following the installation instructions. See [#163](https://github.com/arduino/ArduinoCore-zephyr/issues/163) for more details.
+
 In this section, we’ll guide you through setting up your environment to work on and update the Zephyr core.
 
-Shell scripts are available to simplify the installation process (Windows is not supported at the moment 😔).
+Shell scripts are available to simplify the installation process (Windows is not directly supported at the moment 😔, but there are some tricks - see below).
 
 ### Clone the repository
 ```bash
@@ -125,10 +128,34 @@ git clone https://github.com/arduino/ArduinoCore-zephyr
 ### Pre-requirements
 Before running the installation script, ensure that Python, `pip` and `venv` are installed on your system. The script will automatically install `west` and manage the necessary dependencies.
 
-On Ubuntu or similar `apt`-based distros, make sure to run the following command:
+#### On Ubuntu or similar apt-based distros
 ```bash
 sudo apt install python3-pip python3-setuptools python3-venv build-essential git cmake ninja-build zstd jq
 ```
+#### On macOS
+Make sure you have Homebrew installed. Then run:
+
+```bash
+# Install Xcode Command Line Tools (needed for compilers and make)
+xcode-select --install
+
+# Install required tools and libraries
+brew install python cmake ninja zstd jq git
+```
+Note: Homebrew’s Python installation already includes `pip`, `setuptools` and `venv`.
+
+### On Windows
+Building natively on Windows is not currently supported; however, it is possible to setup and build the loader using [WSL](https://learn.microsoft.com/windows/wsl/about). You will need to follow the instructions given above for installing on Ubuntu.
+
+There are two strategies:
+1) Install the sources in the native Windows filesystem (NTFS, FAT32, etc) and within WSL, cd to the root directory where you installed your sources, like: `/mnt/d/github/ArduinoCore-zephyr`.
+2) Install the sources within the WSL file system, like: `~/git/ArduinoCore-zephyr`
+
+There are pros and cons to both strategies:
+1) Builds are relatively very slow, but once done you can use it directly within Arduino. 
+2) Builds are a lot faster, however, you need to copy the resulting build back to somewhere in your windows directory structure. It is this location, that you will add to the Arduino IDE as mentioned below in the section: Using the core in Arduino IDE/CLI.
+
+In either strategy, you may have to update the link: `cores\arduino\api`.
 
 ### Run the ```bootstrap``` script
 ```bash
@@ -169,15 +196,36 @@ associated variant will be updated.
 
 ### Flash the Loader
 
-If the board is fully supported by Zephyr, you can flash the firmware directly onto the board using the following command:
+To flash the loader, run:
+
 ```bash
-west flash
+west flash -d build/<variant-name>
 ```
+
+The `<variant-name>` appears in the build output when you run the build script. For example:
+
+```bash
+% ./extra/build.sh portentah7
+
+Build target: arduino_portenta_h7@1.0.0//m7
+Build variant: arduino_portenta_h7_stm32h747xx_m7
+-- west build: generating a build system
+...
+```
+
+In this case, you would flash with:
+```bash
+west flash -d build/arduino_portenta_h7_stm32h747xx_m7
+```
+
 This can also be performed via the "Burn bootloader" action in the IDE if the core is properly installed, as detailed below.
 
 ### Using the Core in Arduino IDE/CLI
 
 After running the `bootstrap.sh` script, you can symlink the core to `$sketchbook/hardware/arduino-git/zephyr`. Once linked, it will appear in the IDE/CLI, and the board's Fully Qualified Board Name (FQBN) will be formatted as `arduino-git:zephyr:name_from_boards_txt`.
+
+Remember to also install and/or update the officially published core in the IDE Board Manager to get the latest tools and dependencies. 
+[⚙️ Installation](#️-installation).
 
 ## 🚀 Adding a new target
 
@@ -228,8 +276,6 @@ Contributions are always welcome. The preferred way to receive code contribution
 
 ## 📌 Upcoming features
 
-- [ ] Remove binaries from this repo history (arduino/ArduinoCore-zephyr#102, :warning: will require a clean clone)
-- [x] Network: support UDP and TLS
 - [ ] USB: switch to `USB_DEVICE_STACK_NEXT` to support PluggableUSB
 - [ ] Relocate RODATA in flash to accommodate sketches with large assets
 - [ ] Provide better error reporting for failed llext operations

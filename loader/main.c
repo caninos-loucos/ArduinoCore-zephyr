@@ -64,6 +64,10 @@ void llext_entry(void *arg0, void *arg1, void *arg2)
 }
 #endif /* CONFIG_USERSPACE */
 
+__attribute__((retain)) const uintptr_t sketch_base_addr = DT_REG_ADDR(DT_GPARENT(DT_NODELABEL(user_sketch))) +
+			      DT_REG_ADDR(DT_NODELABEL(user_sketch));
+__attribute__((retain)) const uintptr_t sketch_max_size = DT_REG_SIZE(DT_NODELABEL(user_sketch));
+
 static int loader(const struct shell *sh)
 {
 	const struct flash_area *fa;
@@ -93,6 +97,7 @@ static int loader(const struct shell *sh)
 	}
 
 	size_t sketch_buf_len = sketch_hdr->len;
+	printk("Sketch len is %d\n", sketch_buf_len);
 
 #if TARGET_HAS_USB_CDC_SHELL
 	int debug = sketch_hdr->flags & SKETCH_FLAG_DEBUG;
@@ -140,6 +145,7 @@ static int loader(const struct shell *sh)
 
 	if (!sketch_buf) {
 		printk("Unable to allocate %d bytes\n", sketch_buf_len);
+		return -ENOMEM;
 	}
 
 	rc = flash_area_read(fa, 0, sketch_buf, sketch_buf_len);

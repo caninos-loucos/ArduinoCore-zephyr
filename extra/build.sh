@@ -67,7 +67,22 @@ fi
 # Build the loader
 BUILD_DIR=build/${variant}
 VARIANT_DIR=variants/${variant}
-west build -p -d ${BUILD_DIR} -b ${target} loader -t llext-edk ${args}
+
+if [ -f "${VARIANT_DIR}/${variant}.overlay" ] ; then
+	dtc="-DDTC_OVERLAY_FILE=../${VARIANT_DIR}/${variant}.overlay"
+	echo "DTC Overlay File = ${dtc}"
+else
+	dtc=""
+fi
+
+if [ -f "${VARIANT_DIR}/${variant}.overlay" ] ; then
+	config="-DOVERLAY_CONFIG=../${VARIANT_DIR}/${variant}.conf"
+	echo "Config Overlay File = ${config}"
+else
+	config=""
+fi
+
+west build -p -d ${BUILD_DIR} -b ${target} loader -t llext-edk ${args} -- ${dtc} ${config}
 
 # Extract the generated EDK tarball and copy it to the variant directory
 mkdir -p ${VARIANT_DIR} firmwares
@@ -81,29 +96,28 @@ line_comment_only='^\s*\/\*' # match lines starting with comment
 line_continuation='\\$' # match lines ending with '\'
 c_comment='\s*\/\*.*?\*\/' # match C-style comments and any preceding space
 perl -i -pe "s/${c_comment}//gs unless /${line_preproc_ok}/ || (/${line_comment_only}/ && !/${line_continuation}/)" $(find ${VARIANT_DIR}/llext-edk/include/ -type f)
+
 for ext in elf bin hex; do
     rm -f firmwares/zephyr-$variant.$ext
     if [ -f ${BUILD_DIR}/zephyr/zephyr.$ext ]; then
         cp ${BUILD_DIR}/zephyr/zephyr.$ext firmwares/zephyr-$variant.$ext
     fi
 done
+cp ${BUILD_DIR}/zephyr/zephyr.dts firmwares/zephyr-$variant.dts
+cp ${BUILD_DIR}/zephyr/.config firmwares/zephyr-$variant.config
 
 # Generate the provides.ld file for linked builds
-echo "Exporting provides.ld"
-READELF=${ZEPHYR_SDK_INSTALL_DIR}/arm-zephyr-eabi/bin/arm-zephyr-eabi-readelf
-$READELF --wide -s ${BUILD_DIR}/zephyr/zephyr.elf  | c++filt  | grep FUNC | awk -F' ' '{print "PROVIDE("$8" = 0x"$2");"}' > ${VARIANT_DIR}/provides.ld
-$READELF --wide -s ${BUILD_DIR}/zephyr/zephyr.elf  | c++filt  | grep kheap_llext_heap | awk -F' ' '{print "PROVIDE("$8" = 0x"$2");"}' >> ${VARIANT_DIR}/provides.ld
-$READELF --wide -s ${BUILD_DIR}/zephyr/zephyr.elf  | c++filt  | grep kheap_llext_heap | awk -F' ' '{print "PROVIDE(kheap_llext_heap_size = "$3");"}' >> ${VARIANT_DIR}/provides.ld
-$READELF --wide -s ${BUILD_DIR}/zephyr/zephyr.elf  | c++filt  | grep kheap__system_heap | awk -F' ' '{print "PROVIDE("$8" = 0x"$2");"}' >> ${VARIANT_DIR}/provides.ld
-$READELF --wide -s ${BUILD_DIR}/zephyr/zephyr.elf  | c++filt  | grep kheap__system_heap | awk -F' ' '{print "PROVIDE(kheap__system_heap_size = "$3");"}' >> ${VARIANT_DIR}/provides.ld
-cat ${BUILD_DIR}/zephyr/zephyr.map | grep __device_dts_ord | grep -v rodata | grep -v llext_const_symbol |  awk -F' ' '{print "PROVIDE("$2" = "$1");"}'  >> ${VARIANT_DIR}/provides.ld
-TEXT_START=`cat variants/$variant/$variant.overlay | grep user_sketch: | cut -f2 -d"@" | cut -f1 -d"{"`
-echo "PROVIDE(_sketch_start = 0x$TEXT_START);" >> ${VARIANT_DIR}/provides.ld
-
-sed -i 's/PROVIDE(malloc =/PROVIDE(__wrap_malloc =/g' ${VARIANT_DIR}/provides.ld
-sed -i 's/PROVIDE(free =/PROVIDE(__wrap_free =/g' ${VARIANT_DIR}/provides.ld
-sed -i 's/PROVIDE(realloc =/PROVIDE(__wrap_realloc =/g' ${VARIANT_DIR}/provides.ld
-sed -i 's/PROVIDE(calloc =/PROVIDE(__wrap_calloc =/g' ${VARIANT_DIR}/provides.ld
-sed -i 's/PROVIDE(random =/PROVIDE(__wrap_random =/g' ${VARIANT_DIR}/provides.ld
+echo "Generating exported symbol scripts"
+extra/gen_provides.py "${BUILD_DIR}/zephyr/zephyr.elf" -L > ${VARIANT_DIR}/syms-dynamic.ld
+extra/gen_provides.py "${BUILD_DIR}/zephyr/zephyr.elf" -LF \
+	"+kheap_llext_heap" \
+	"+kheap__system_heap" \
+	"*sketch_base_addr=_sketch_start" \
+	"*sketch_max_size=_sketch_max_size" \
+	"malloc=__wrap_malloc" \
+	"free=__wrap_free" \
+	"realloc=__wrap_realloc" \
+	"calloc=__wrap_calloc" \
+	"random=__wrap_random" > ${VARIANT_DIR}/syms-static.ld
 
 cmake -P extra/gen_arduino_files.cmake $variant

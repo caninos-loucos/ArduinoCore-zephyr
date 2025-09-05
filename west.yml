@@ -34,7 +34,9 @@ manifest:
           - segger
           - thrift
           - mcuboot
+          - nanopb
           - lvgl
+          - zcbor
         path-allowlist:
           - modules/hal/*
 

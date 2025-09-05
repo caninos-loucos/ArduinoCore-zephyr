@@ -64,8 +64,6 @@ EXPORT_SYMBOL(usb_enable);
 EXPORT_SYMBOL(usb_disable);
 #endif
 
-EXPORT_SYMBOL(z_log_msg_runtime_vcreate);
-
 #if defined(CONFIG_NETWORKING)
 FORCE_EXPORT_SYM(net_if_foreach);
 FORCE_EXPORT_SYM(net_if_down);
@@ -118,6 +116,9 @@ FORCE_EXPORT_SYM(net_buf_simple_pull);
 FORCE_EXPORT_SYM(net_buf_simple_add_mem);
 FORCE_EXPORT_SYM(net_buf_simple_pull_mem);
 FORCE_EXPORT_SYM(net_buf_unref);
+#if defined(CONFIG_BT_HCI_SETUP)
+FORCE_EXPORT_SYM(bt_h4_vnd_setup);
+#endif
 #endif
 
 #if defined(CONFIG_STACK_CANARIES)
@@ -129,6 +130,7 @@ FORCE_EXPORT_SYM(__stack_chk_fail);
 FORCE_EXPORT_SYM(video_buffer_aligned_alloc);
 FORCE_EXPORT_SYM(video_buffer_alloc);
 FORCE_EXPORT_SYM(video_buffer_release);
+FORCE_EXPORT_SYM(video_set_ctrl);
 #endif
 
 #if defined(CONFIG_SHARED_MULTI_HEAP)
@@ -138,6 +140,7 @@ FORCE_EXPORT_SYM(shared_multi_heap_free);
 
 #if defined(CONFIG_NET_SOCKETS)
 FORCE_EXPORT_SYM(getaddrinfo);
+FORCE_EXPORT_SYM(freeaddrinfo)
 FORCE_EXPORT_SYM(socket);
 FORCE_EXPORT_SYM(connect);
 FORCE_EXPORT_SYM(send);
@@ -228,11 +231,14 @@ FORCE_EXPORT_SYM(__aeabi_uidivmod);
 FORCE_EXPORT_SYM(__aeabi_dcmpeq);
 FORCE_EXPORT_SYM(__aeabi_d2iz);
 FORCE_EXPORT_SYM(__aeabi_f2d);
+FORCE_EXPORT_SYM(__aeabi_ul2d);
+FORCE_EXPORT_SYM(__aeabi_l2f);
 FORCE_EXPORT_SYM(__aeabi_idivmod);
 FORCE_EXPORT_SYM(__aeabi_ldivmod);
 FORCE_EXPORT_SYM(__aeabi_ul2f);
 FORCE_EXPORT_SYM(__aeabi_dcmpge);
-FORCE_EXPORT_SYM(__cxa_pure_virtual);
 #endif
 
-// Add exports for each riscv isa extension
+#if defined (CONFIG_CPP)
+FORCE_EXPORT_SYM(__cxa_pure_virtual);
+#endif

@@ -14,14 +14,12 @@ done
 
 python3 -m venv venv
 source venv/bin/activate
-pip install west
+pip install west protobuf grpcio-tools
 west init -l .
 west config manifest.project-filter -- "$HAL_FILTER"
 west update "$@"
 west zephyr-export
 pip install -r ../zephyr/scripts/requirements-base.txt
-west sdk install --version 0.17.0 -t arm-zephyr-eabi riscv64-zephyr-elf
 
-for hal in $NEEDED_HALS; do
-	west blobs fetch $hal
-done
+west sdk install --version 0.17.0 -t arm-zephyr-eabi riscv64-zephyr-elf
+west blobs fetch $NEEDED_HALS
