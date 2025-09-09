@@ -2,8 +2,7 @@
 #include <cmsis_core.h>
 #include <zephyr/init.h>
 
-int disable_mpu_rasr_xn(void)
-{
+int disable_mpu_rasr_xn(void) {
 	uint32_t index;
 	/* Kept the max index as 8(irrespective of soc) because the sram
 	 * would most likely be set at index 2.
@@ -33,13 +32,46 @@ int disable_bootloader_mpu() {
 	__DMB();
 	MPU->CTRL = 0;
 	__enable_irq();
-    return 0;
+	return 0;
 }
+
 SYS_INIT(disable_bootloader_mpu, PRE_KERNEL_1, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT);
 #endif
 
 #if defined(CONFIG_ARM_MPU)
 SYS_INIT(disable_mpu_rasr_xn, PRE_KERNEL_1, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT);
+#endif
+
+#if defined(CONFIG_SOC_STM32H747XX_M7)
+int enable_bkp_access(void) {
+	/* Enable access to the backup domain */
+	// HAL_PWR_EnableBkUpAccess();
+	SET_BIT(PWR->CR1, PWR_CR1_DBP);
+	return 0;
+}
+
+SYS_INIT(enable_bkp_access, POST_KERNEL, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT);
+#endif
+
+#if defined(CONFIG_INPUT)
+#include <zephyr/kernel.h>
+#include <zephyr/device.h>
+#include <zephyr/input/input.h>
+typedef void (*zephyr_input_callback_t)(struct input_event *evt, void *user_data);
+
+static zephyr_input_callback_t zephyr_input_cb = NULL;
+
+void zephyr_input_register_callback(zephyr_input_callback_t cb) {
+	zephyr_input_cb = cb;
+}
+
+static void zephyr_input_callback(struct input_event *evt, void *user_data) {
+	if (zephyr_input_cb) {
+		zephyr_input_cb(evt, user_data);
+	}
+}
+
+INPUT_CALLBACK_DEFINE(NULL, zephyr_input_callback, NULL);
 #endif
 
 #if defined(CONFIG_BOARD_ARDUINO_GIGA_R1) && defined(CONFIG_VIDEO)
@@ -48,8 +80,7 @@ SYS_INIT(disable_mpu_rasr_xn, PRE_KERNEL_1, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT)
 #include <zephyr/drivers/clock_control.h>
 #include <zephyr/logging/log.h>
 
-int camera_ext_clock_enable(void)
-{
+int camera_ext_clock_enable(void) {
 	int ret;
 	uint32_t rate;
 	const struct device *cam_ext_clk_dev = DEVICE_DT_GET(DT_NODELABEL(pwmclock));
@@ -80,25 +111,25 @@ SYS_INIT(camera_ext_clock_enable, POST_KERNEL, CONFIG_CLOCK_CONTROL_PWM_INIT_PRI
 #include <zephyr/devicetree.h>
 #include <zephyr/multi_heap/shared_multi_heap.h>
 
-__stm32_sdram1_section static uint8_t __aligned(32) smh_pool[4*1024*1024];
+__stm32_sdram1_section static uint8_t __aligned(32) smh_pool[4 * 1024 * 1024];
 
 int smh_init(void) {
-    int ret = 0;
-    ret = shared_multi_heap_pool_init();
-    if (ret != 0) {
-        return ret;
-    }
+	int ret = 0;
+	ret = shared_multi_heap_pool_init();
+	if (ret != 0) {
+		return ret;
+	}
 
-    struct shared_multi_heap_region smh_sdram = {
-        .addr = (uintptr_t) smh_pool,
-        .size = sizeof(smh_pool),
-        .attr = SMH_REG_ATTR_EXTERNAL,
-    };
+	struct shared_multi_heap_region smh_sdram = {
+		.addr = (uintptr_t)smh_pool,
+		.size = sizeof(smh_pool),
+		.attr = SMH_REG_ATTR_EXTERNAL,
+	};
 
-    ret = shared_multi_heap_add(&smh_sdram, NULL);
-    if (ret != 0) {
-        return ret;
-    }
+	ret = shared_multi_heap_add(&smh_sdram, NULL);
+	if (ret != 0) {
+		return ret;
+	}
 	return 0;
 }
 
@@ -109,12 +140,11 @@ SYS_INIT(smh_init, POST_KERNEL, CONFIG_KERNEL_INIT_PRIORITY_DEFAULT);
 #include <zephyr/kernel.h>
 #include <zephyr/storage/flash_map.h>
 
-int maybe_flash_bootloader(void)
-{
+int maybe_flash_bootloader(void) {
 	// memcmp the first 256bytes of "embedded bootloader" and address 0x0
 	// if they are different, flash the bootloader
 	const uint8_t embedded_bootloader[] = {
-		#include "c33_bl_patch/c33_bl.bin.inc"
+#include "c33_bl_patch/c33_bl.bin.inc"
 	};
 
 	const struct flash_area *fa;

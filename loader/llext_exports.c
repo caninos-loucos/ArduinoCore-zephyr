@@ -68,11 +68,13 @@ EXPORT_SYMBOL(usb_disable);
 FORCE_EXPORT_SYM(net_if_foreach);
 FORCE_EXPORT_SYM(net_if_down);
 FORCE_EXPORT_SYM(net_if_get_by_iface);
+#if defined(CONFIG_NET_IPV4)
 FORCE_EXPORT_SYM(net_if_ipv4_maddr_add);
 FORCE_EXPORT_SYM(net_if_ipv4_maddr_join);
 FORCE_EXPORT_SYM(net_if_ipv4_set_gw);
 FORCE_EXPORT_SYM(net_if_ipv4_addr_add);
 FORCE_EXPORT_SYM(net_if_ipv4_set_netmask_by_addr);
+#endif
 FORCE_EXPORT_SYM(net_if_lookup_by_dev);
 #endif
 
@@ -119,6 +121,13 @@ FORCE_EXPORT_SYM(net_buf_unref);
 #if defined(CONFIG_BT_HCI_SETUP)
 FORCE_EXPORT_SYM(bt_h4_vnd_setup);
 #endif
+#if defined(CONFIG_CYW4343W_MURATA_1DX)
+FORCE_EXPORT_SYM(brcm_patchram_buf);
+FORCE_EXPORT_SYM(brcm_patch_ram_length);
+#endif
+#if defined(CONFIG_BT_LL_SW_SPLIT)
+FORCE_EXPORT_SYM(bt_ctlr_set_public_addr);
+#endif
 #endif
 
 #if defined(CONFIG_STACK_CANARIES)
@@ -131,6 +140,9 @@ FORCE_EXPORT_SYM(video_buffer_aligned_alloc);
 FORCE_EXPORT_SYM(video_buffer_alloc);
 FORCE_EXPORT_SYM(video_buffer_release);
 FORCE_EXPORT_SYM(video_set_ctrl);
+#endif
+#if defined(CONFIG_INPUT)
+FORCE_EXPORT_SYM(zephyr_input_register_callback);
 #endif
 
 #if defined(CONFIG_SHARED_MULTI_HEAP)
@@ -197,17 +209,19 @@ EXPORT_SYMBOL(printf);
 EXPORT_SYMBOL(sprintf);
 EXPORT_SYMBOL(snprintf);
 EXPORT_SYMBOL(cbvprintf);
-;
 FORCE_EXPORT_SYM(abort);
+
 #if defined(CONFIG_RING_BUFFER)
 EXPORT_SYMBOL(ring_buf_get);
 EXPORT_SYMBOL(ring_buf_peek);
 EXPORT_SYMBOL(ring_buf_put);
+EXPORT_SYMBOL(ring_buf_area_claim);
+EXPORT_SYMBOL(ring_buf_area_finish);
 #endif
 
 EXPORT_SYMBOL(sys_clock_cycle_get_32);
 
-#if defined(CONFIG_ARM_MPU)
+#if defined(CONFIG_ARM)
 FORCE_EXPORT_SYM(__aeabi_dcmpun);
 FORCE_EXPORT_SYM(__aeabi_dcmple);
 FORCE_EXPORT_SYM(__aeabi_d2lz);
@@ -237,7 +251,12 @@ FORCE_EXPORT_SYM(__aeabi_idivmod);
 FORCE_EXPORT_SYM(__aeabi_ldivmod);
 FORCE_EXPORT_SYM(__aeabi_ul2f);
 FORCE_EXPORT_SYM(__aeabi_dcmpge);
+
+#elif defined(CONFIG_RISCV)
+FORCE_EXPORT_SYM(__udivdi3);
 #endif
+
+
 
 #if defined (CONFIG_CPP)
 FORCE_EXPORT_SYM(__cxa_pure_virtual);

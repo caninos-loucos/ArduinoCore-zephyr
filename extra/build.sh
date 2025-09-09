@@ -82,6 +82,7 @@ else
 	config=""
 fi
 
+rm -rf ${BUILD_DIR}
 west build -p -d ${BUILD_DIR} -b ${target} loader -t llext-edk ${args} -- ${dtc} ${config}
 
 # Extract the generated EDK tarball and copy it to the variant directory
@@ -112,6 +113,7 @@ extra/gen_provides.py "${BUILD_DIR}/zephyr/zephyr.elf" -L > ${VARIANT_DIR}/syms-
 extra/gen_provides.py "${BUILD_DIR}/zephyr/zephyr.elf" -LF \
 	"+kheap_llext_heap" \
 	"+kheap__system_heap" \
+    "__device_dts_ord_*" \
 	"*sketch_base_addr=_sketch_start" \
 	"*sketch_max_size=_sketch_max_size" \
 	"malloc=__wrap_malloc" \

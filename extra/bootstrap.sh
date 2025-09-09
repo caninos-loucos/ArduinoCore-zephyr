@@ -21,5 +21,5 @@ west update "$@"
 west zephyr-export
 pip install -r ../zephyr/scripts/requirements-base.txt
 
-west sdk install --version 0.17.0 -t arm-zephyr-eabi riscv64-zephyr-elf
+west sdk install --version 0.16.8 -t arm-zephyr-eabi riscv64-zephyr-elf
 west blobs fetch $NEEDED_HALS

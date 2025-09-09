@@ -22,6 +22,9 @@
               "name": "Arduino Nano 33 BLE"
             },
             {
+              "name": "Arduino Opta"
+            },
+            {
               "name": "Arduino Portenta H7"
             },
             {
@@ -35,12 +38,20 @@
             },
             {
               "name": "NXP FRDM RW612"
+            },
+            {
+              "name": "Puppy Testboard"
             }
           ],
           "toolsDependencies": [
             {
               "packager": "zephyr",
               "name": "arm-zephyr-eabi",
+              "version": "0.16.8"
+            },
+            {
+              "packager": "zephyr",
+              "name": "riscv64-zephyr-elf",
               "version": "0.16.8"
             },
             {
@@ -56,6 +67,11 @@
             {
               "packager": "arduino",
               "name": "zephyr-sketch-tool",
+              "version": "0.1.0"
+            },
+            {
+              "packager": "arduino",
+              "name": "sync-zephyr-artifacts",
               "version": "0.1.0"
             }
           ]

@@ -60,13 +60,12 @@ func main() {
 		header.flags |= 0x02
 	}
 
-	var buf bytes.Buffer
-	err = binary.Write(&buf, binary.LittleEndian, header)
+	var bytes = make([]byte, 9)
+	_, err = binary.Encode(bytes, binary.LittleEndian, header)
 	if err != nil {
 		fmt.Printf("Error encoding header: %v\n", err)
 		return
 	}
-	headerBytes := buf.Bytes()
 
 	// Bytes 7 to 15 are free to use in current ELF specification. We will
 	// use them to store the debug and linked flags.
@@ -81,7 +80,7 @@ func main() {
 	}
 
 	// Change the header bytes in the content
-	copy(content[7:16], headerBytes)
+	copy(content[7:16], bytes)
 
 	// Create a new filename for the copy
 	newFilename := *output

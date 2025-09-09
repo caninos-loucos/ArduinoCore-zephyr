@@ -1,6 +1,7 @@
 / {
 	zephyr,user {
-		digital-pin-gpios = <&gpio0 0 0>;
+		builtin-led-gpios = <&gpio0 23 0>; //led3
+		digital-pin-gpios = <&gpio0 12 0>; //d7
 		serials = <&uart0>;
 		i2cs = <&i2c0>;
 	};
