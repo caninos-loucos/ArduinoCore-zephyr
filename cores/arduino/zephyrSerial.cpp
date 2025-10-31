@@ -160,9 +160,6 @@ size_t arduino::ZephyrSerial::write(const uint8_t *buffer, size_t size) {
 		k_sem_take(&tx.sem, K_FOREVER);
 		auto ret = ring_buf_put(&tx.ringbuf, &buffer[idx], size - idx);
 		k_sem_give(&tx.sem);
-		if (ret < 0) {
-			return 0;
-		}
 		idx += ret;
 		if (ret == 0) {
 			uart_irq_tx_enable(uart);

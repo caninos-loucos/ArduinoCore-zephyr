@@ -84,7 +84,7 @@ struct gpio_port_callback {
 	struct arduino_callback handlers[max_ngpios];
 	gpio_port_pins_t pins;
 	const struct device *dev;
-} port_callback[port_num] = {0};
+} port_callback[port_num] = {};
 
 struct gpio_port_callback *find_gpio_port_callback(const struct device *dev) {
 	for (size_t i = 0; i < ARRAY_SIZE(port_callback); i++) {
@@ -295,7 +295,6 @@ unsigned long millis(void) {
 	return k_uptime_get_32();
 }
 
-#if defined(CONFIG_DAC) || defined(CONFIG_PWM)
 static int _analog_write_resolution = 8;
 
 void analogWriteResolution(int bits) {
@@ -305,9 +304,8 @@ void analogWriteResolution(int bits) {
 int analogWriteResolution() {
 	return _analog_write_resolution;
 }
-#endif
 
-#ifdef CONFIG_PWM
+#if defined(CONFIG_PWM)
 
 void analogWrite(pin_size_t pinNumber, int value) {
 	size_t idx = pwm_pin_index(pinNumber);
@@ -335,9 +333,7 @@ void analogWrite(pin_size_t pinNumber, int value) {
 	(void)pwm_set_pulse_dt(&arduino_pwm[idx], value);
 }
 
-#endif
-
-#ifdef CONFIG_DAC
+#elif defined(CONFIG_DAC)
 void analogWrite(enum dacPins dacName, int value) {
 	if (dacName >= NUM_OF_DACS) {
 		return;
@@ -349,6 +345,13 @@ void analogWrite(enum dacPins dacName, int value) {
 	dac_write_value(dac_dev, dac_ch_cfg[dacName].channel_id,
 					map(value, 0, 1 << _analog_write_resolution, 0, max_dac_value));
 }
+#else
+
+void analogWrite(pin_size_t pinNumber, int value) {
+	if (value < 128) digitalWrite(pinNumber, 0);
+	else digitalWrite(pinNumber, 1);
+}
+
 #endif
 
 #ifdef CONFIG_ADC

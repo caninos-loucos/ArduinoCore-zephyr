@@ -551,29 +551,29 @@ puppy.bootloader.address=0x11000
 
 ##############################################################################################################
 
-puppy.name=poodleino-toy-v1
-puppy.build.core=arduino
-puppy.build.board=poodleino-toy-v1
-puppy.build.zephyr_target=poodleino-toy-v1
-puppy.build.variant=poodleino-toy-v1_puppy_v2
+poodleino.name=poodleino-toy-v1
+poodleino.build.core=arduino
+poodleino.build.board=poodleino-toy-v1
+poodleino.build.zephyr_target=poodleino-toy-v1
+poodleino.build.variant=poodleino-toy-v1_puppy_v2
 
-puppy.build.crossprefix=riscv64-zephyr-elf-
-puppy.build.compiler_path=/home/ana/zephyr-sdk-0.16.8/riscv64-zephyr-elf/bin/
-puppy.compiler.zephyr=
-puppy.compiler.zephyr.arch.define=-DRV_ISA_RV32
-puppy.runtime.tools.zephyr-sketch-tool.path=/home/ana/arduino-puppy/ArduinoCore-zephyr/extra/zephyr-sketch-tool
+poodleino.build.crossprefix=riscv64-zephyr-elf-
+poodleino.build.compiler_path=/home/ana/zephyr-sdk-0.16.8/riscv64-zephyr-elf/bin/
+poodleino.compiler.zephyr=
+poodleino.runtime.tools.zephyr-sketch-tool.path=/home/ana/arduino-puppy/ArduinoCore-zephyr/extra/zephyr-sketch-tool
 
-puppy.build.postbuild.cmd="{tools.imgtool.path}/{tools.imgtool.cmd}" exit
-puppy.build.architecture=rv32imfc_zicsr
-puppy.build.mcu=rv32imfc_zicsr
+poodleino.build.postbuild.cmd="{tools.imgtool.path}/{tools.imgtool.cmd}" exit
+poodleino.build.architecture=rv32imafc_zicsr
+poodleino.build.mcu=rv32imafc_zicsr
+poodleino.build.abi=ilp32
 
-puppy.upload.address=0xe1000
-puppy.upload.maximum_size=32768
+poodleino.upload.address=0xe1000
+poodleino.upload.maximum_size=32768
 
-puppy.bootloader.tool=dfu-util
-puppy.bootloader.tool.default=dfu-util
-puppy.bootloader.vid=0x2341
-puppy.bootloader.pid=0x0364
-puppy.bootloader.interface=0
-puppy.bootloader.file=zephyr-{build.variant}.bin
-puppy.bootloader.address=0x11000
+poodleino.bootloader.tool=dfu-util
+poodleino.bootloader.tool.default=dfu-util
+poodleino.bootloader.vid=0x2341
+poodleino.bootloader.pid=0x0364
+poodleino.bootloader.interface=0
+poodleino.bootloader.file=zephyr-{build.variant}.bin
+poodleino.bootloader.address=0x11000

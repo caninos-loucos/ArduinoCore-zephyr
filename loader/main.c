@@ -138,7 +138,7 @@ static int loader(const struct shell *sh) {
 	}
 
 #if defined(CONFIG_LLEXT_STORAGE_WRITABLE)
-	uint8_t *sketch_buf = k_aligned_alloc(4096, sketch_buf_len);
+	uint8_t *sketch_buf = k_aligned_alloc(4, sketch_buf_len);
 
 	if (!sketch_buf) {
 		printk("Unable to allocate %d bytes\n", sketch_buf_len);
