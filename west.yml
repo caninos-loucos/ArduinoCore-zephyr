@@ -5,47 +5,43 @@
 # if you are in the zephyrproject directory or else things may break.
 
 manifest:
-  self:
-    path: modules/lib/ArduinoCore-zephyr
+    self:
+        path: modules/lib/ArduinoCore-zephyr
 
-  remotes:
-    - name: caninos
-      url-base: https://github.com/anacforcelli
-    - name: zephyrproject-rtos
-      url-base: https://github.com/zephyrproject-rtos
-    - name: arduino
-      url-base: https://github.com/arduino
-    - name: facchinm
-      url-base: https://github.com/facchinm
-    - name: pillo79
-      url-base: https://github.com/pillo79
+    remotes:
+        - name: caninos
+          url-base: https://github.com/anacforcelli
+        - name: zephyrproject-rtos
+          url-base: https://github.com/zephyrproject-rtos
+        - name: arduino
+          url-base: https://github.com/arduino
+        - name: facchinm
+          url-base: https://github.com/facchinm
+        - name: pillo79
+          url-base: https://github.com/pillo79
 
-  projects:
-    - name: zephyr
-      remote: caninos
-      revision: main
-      import:
-        name-allowlist:
-          - cmsis
-          - cmsis_6
-          - littlefs
-          - tinycrypt
-          - mbedtls
-          - segger
-          - thrift
-          - mcuboot
-          - nanopb
-          - lvgl
-          - zcbor
-        path-allowlist:
-          - modules/hal/*
+    projects:
+        - name: zephyr
+          remote: caninos
+          revision: arduino-hotfix
+          import:
+              name-allowlist:
+                  - littlefs
+                  - tinycrypt
+                  - mbedtls
+                  - segger
+                  - thrift
+                  - mcuboot
+                  - nanopb
+                  - lvgl
+                  - zcbor
 
-        # The actual list of enabled HALs is set by extra/bootstrap.sh via
-        # the 'manifest.project-filter' config. Enable all Zephyr HALs with:
-        #
-        #   west config -d manifest.project-filter
+              # The actual list of enabled HALs is set by extra/bootstrap.sh via
+              # the 'manifest.project-filter' config. Enable all Zephyr HALs with:
+              #
+              #   west config -d manifest.project-filter
 
-    - name: ArduinoCore-API
-      path: modules/lib/ArduinoCore-API
-      revision: master
-      url: https://github.com/arduino/ArduinoCore-API
+        - name: ArduinoCore-API
+          path: modules/lib/ArduinoCore-API
+          revision: master
+          url: https://github.com/arduino/ArduinoCore-API
