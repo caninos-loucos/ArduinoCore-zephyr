@@ -20,5 +20,6 @@
 
 		serials = <&uart0>;
 		i2cs = <&i2c0>;
+		spis = <&spi0>;
 	};
 };
