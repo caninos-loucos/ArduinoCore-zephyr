@@ -525,9 +525,9 @@ opta.debug.svd_file={runtime.platform.path}/svd/STM32H747_CM7.svd
 poodle.name=Poodle Toy v1
 poodle.build.core=arduino
 poodle.build.zephyr_hals=
-poodle.build.board=poodle-toy-v1_puppy_v2
-poodle.build.zephyr_target=poodle-toy-v1_puppy_v2
-poodle.build.variant=poodle-toy-v1_puppy_v2
+poodle.build.board=poodle-toy-v1
+poodle.build.zephyr_target=poodle-toy-v1
+poodle.build.variant=poodle-toy-v1
 
 poodle.build.architecture=rv32imfc_zicsr
 poodle.build.mcu=rv32imfc_zicsr
