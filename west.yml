@@ -40,11 +40,8 @@ manifest:
                   - hal_stm32
                   - hal_infineon
                   - hal_renesas
-
-              # The actual list of enabled HALs is set by extra/bootstrap.sh via
-              # the 'manifest.project-filter' config. Enable all Zephyr HALs with:
-              #
-              #   west config -d manifest.project-filter
+                  - hal_rpi_pico
+                  - cmsis_6
 
         - name: ArduinoCore-API
           path: modules/lib/ArduinoCore-API
