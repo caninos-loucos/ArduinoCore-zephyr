@@ -1,3 +1,5 @@
+/delete-node/ &flash0;
+
 / {
 	zephyr,user {
 		digital-pin-gpios =	<&arduino_header 6 GPIO_ACTIVE_HIGH>,
@@ -22,4 +24,36 @@
 		i2cs = <&i2c0>;
 		spis = <&spi0>;
 	};
+};
+
+&spi0 {
+    flash0: flash@0 {
+        compatible = "jedec,spi-nor";
+        reg = <0>;
+        spi-max-frequency = <20000000>;
+        size = <DT_SIZE_M(8)>;
+        status = "okay";
+
+        partitions {
+            compatible = "fixed-partitions";
+            #size-cells = <1>;
+            #address-cells = <1>;
+
+            boot_partition: partition@0 {
+                reg = <0 0x20000>;
+                label = "boot_partition";
+                read-only;
+            };
+
+            slot0_partition: partition@20000 {
+                reg = <0x20000 0x2E000>;
+                label = "slot0";
+            };
+
+            user_sketch: partition@4E000 {
+                reg = <0x4E000 0x12000>;
+				label = "user_sketch";
+            };
+        };
+    };
 };

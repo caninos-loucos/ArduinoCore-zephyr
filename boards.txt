@@ -6,7 +6,7 @@ menu.link_mode=Link mode
 giga.name=Arduino Giga R1
 giga.build.core=arduino
 giga.build.crossprefix=arm-zephyr-eabi-
-giga.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.16.8.path}/bin/
+giga.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.17.4.path}/bin/
 
 giga.menu.debug.false=Standard
 giga.menu.debug.true=Debug
@@ -68,7 +68,7 @@ giga.debug.svd_file={runtime.platform.path}/svd/STM32H747_CM7.svd
 nano33ble.name=Arduino Nano 33 BLE
 nano33ble.build.core=arduino
 nano33ble.build.crossprefix=arm-zephyr-eabi-
-nano33ble.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.16.8.path}/bin/
+nano33ble.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.17.4.path}/bin/
 
 nano33ble.menu.debug.false=Standard
 nano33ble.menu.debug.true=Debug
@@ -128,7 +128,7 @@ nano33ble.debug.cortex-debug.custom.request=attach
 ek_ra8d1.name=EK_RA8D1
 ek_ra8d1.build.core=arduino
 ek_ra8d1.build.crossprefix=arm-zephyr-eabi-
-ek_ra8d1.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.16.8.path}/bin/
+ek_ra8d1.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.17.4.path}/bin/
 
 ek_ra8d1.menu.debug.false=Standard
 ek_ra8d1.menu.debug.true=Debug
@@ -182,7 +182,7 @@ ek_ra8d1.bootloader.target=R7FA8D1AH
 frdm_mcxn947.name=MCXN947
 frdm_mcxn947.build.core=arduino
 frdm_mcxn947.build.crossprefix=arm-zephyr-eabi-
-frdm_mcxn947.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.16.8.path}/bin/
+frdm_mcxn947.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.17.4.path}/bin/
 
 frdm_mcxn947.menu.debug.false=Standard
 frdm_mcxn947.menu.debug.true=Debug
@@ -231,7 +231,7 @@ frdm_mcxn947.bootloader.target=mcxn947vdf
 portentah7.name=Arduino Portenta H7
 portentah7.build.core=arduino
 portentah7.build.crossprefix=arm-zephyr-eabi-
-portentah7.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.16.8.path}/bin/
+portentah7.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.17.4.path}/bin/
 
 portentah7.menu.debug.false=Standard
 portentah7.menu.debug.true=Debug
@@ -293,7 +293,7 @@ portentah7.debug.svd_file={runtime.platform.path}/svd/STM32H747_CM7.svd
 frdm_rw612.name=RW612
 frdm_rw612.build.core=arduino
 frdm_rw612.build.crossprefix=arm-zephyr-eabi-
-frdm_rw612.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.16.8.path}/bin/
+frdm_rw612.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.17.4.path}/bin/
 
 frdm_rw612.menu.debug.false=Standard
 frdm_rw612.menu.debug.true=Debug
@@ -341,7 +341,7 @@ frdm_rw612.bootloader.target=rw612
 niclasense.name=Arduino Nicla Sense ME
 niclasense.build.core=arduino
 niclasense.build.crossprefix=arm-zephyr-eabi-
-niclasense.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.16.8.path}/bin/
+niclasense.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.17.4.path}/bin/
 
 niclasense.menu.debug.false=Standard
 niclasense.menu.debug.true=Debug
@@ -407,7 +407,7 @@ niclasense.debug.cortex-debug.custom.request=attach
 portentac33.name=Portenta C33
 portentac33.build.core=arduino
 portentac33.build.crossprefix=arm-zephyr-eabi-
-portentac33.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.16.8.path}/bin/
+portentac33.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.17.4.path}/bin/
 
 portentac33.menu.debug.false=Standard
 portentac33.menu.debug.true=Debug
@@ -463,7 +463,7 @@ portentac33.bootloader.dfuse=-Q
 opta.name=Arduino Opta
 opta.build.core=arduino
 opta.build.crossprefix=arm-zephyr-eabi-
-opta.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.16.8.path}/bin/
+opta.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.17.4.path}/bin/
 
 opta.menu.debug.false=Standard
 opta.menu.debug.true=Debug
@@ -520,60 +520,21 @@ opta.debug.server.openocd.scripts.2=target/stm32h7x_dual_bank.cfg
 opta.debug.cortex-debug.custom.request=attach
 opta.debug.svd_file={runtime.platform.path}/svd/STM32H747_CM7.svd
 
-##############################################################################################################
+##########################################################################################
 
-puppy.name=puppy-testboard
-puppy.build.core=arduino
-puppy.build.board=puppy-testboard
-puppy.build.zephyr_target=puppy-testboard
-puppy.build.variant=puppy-testboard_puppy_v1
+poodle.name=Poodle Toy v1
+poodle.build.core=arduino
+poodle.build.zephyr_hals=
+poodle.build.board=poodle-toy-v1_puppy_v2
+poodle.build.zephyr_target=poodle-toy-v1_puppy_v2
+poodle.build.variant=poodle-toy-v1_puppy_v2
 
-puppy.build.crossprefix=riscv64-zephyr-elf-
-puppy.build.compiler_path=/home/ana/zephyr-sdk-0.16.8/riscv64-zephyr-elf/bin/
-puppy.compiler.zephyr=
-puppy.compiler.zephyr.arch.define=-DRV_ISA_RV32
-puppy.runtime.tools.zephyr-sketch-tool.path=/home/ana/arduino-puppy/ArduinoCore-zephyr/extra/zephyr-sketch-tool
+poodle.build.architecture=rv32imfc_zicsr
+poodle.build.mcu=rv32imfc_zicsr
+poodle.build.abi=ilp32
+poodle.build.crossprefix=riscv64-zephyr-elf-
+poodle.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.17.4.path}/riscv64-zephyr-elf/bin/
+poodle.compiler.zephyr=
+poodle.runtime.tools.zephyr-sketch-tool.path=/home/ana/arduino-puppy/ArduinoCore-zephyr/extra/zephyr-sketch-tool
 
-puppy.build.postbuild.cmd="{tools.imgtool.path}/{tools.imgtool.cmd}" exit
-puppy.build.architecture=rv32im_zicsr
-puppy.build.mcu=rv32im_zicsr
-
-puppy.upload.address=0xf1000
-puppy.upload.maximum_size=32768
-
-puppy.bootloader.tool=dfu-util
-puppy.bootloader.tool.default=dfu-util
-puppy.bootloader.vid=0x2341
-puppy.bootloader.pid=0x0364
-puppy.bootloader.interface=0
-puppy.bootloader.file=zephyr-{build.variant}.bin
-puppy.bootloader.address=0x11000
-
-##############################################################################################################
-
-poodleino.name=poodleino-toy-v1
-poodleino.build.core=arduino
-poodleino.build.board=poodleino-toy-v1
-poodleino.build.zephyr_target=poodleino-toy-v1
-poodleino.build.variant=poodleino-toy-v1_puppy_v2
-
-poodleino.build.crossprefix=riscv64-zephyr-elf-
-poodleino.build.compiler_path=/home/ana/zephyr-sdk-0.16.8/riscv64-zephyr-elf/bin/
-poodleino.compiler.zephyr=
-poodleino.runtime.tools.zephyr-sketch-tool.path=/home/ana/arduino-puppy/ArduinoCore-zephyr/extra/zephyr-sketch-tool
-
-poodleino.build.postbuild.cmd="{tools.imgtool.path}/{tools.imgtool.cmd}" exit
-poodleino.build.architecture=rv32imafc_zicsr
-poodleino.build.mcu=rv32imafc_zicsr
-poodleino.build.abi=ilp32
-
-poodleino.upload.address=0xe1000
-poodleino.upload.maximum_size=32768
-
-poodleino.bootloader.tool=dfu-util
-poodleino.bootloader.tool.default=dfu-util
-poodleino.bootloader.vid=0x2341
-poodleino.bootloader.pid=0x0364
-poodleino.bootloader.interface=0
-poodleino.bootloader.file=zephyr-{build.variant}.bin
-poodleino.bootloader.address=0x11000
+poodle.build.postbuild.cmd="{tools.imgtool.path}/{tools.imgtool.cmd}" exit

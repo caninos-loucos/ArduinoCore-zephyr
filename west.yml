@@ -23,7 +23,7 @@ manifest:
     projects:
         - name: zephyr
           remote: caninos
-          revision: arduino-hotfix
+          revision: main
           import:
               name-allowlist:
                   - littlefs
