@@ -35,6 +35,11 @@ manifest:
                   - nanopb
                   - lvgl
                   - zcbor
+                  - hal_nxp
+                  - hal_nordic
+                  - hal_stm32
+                  - hal_infineon
+                  - hal_renesas
 
               # The actual list of enabled HALs is set by extra/bootstrap.sh via
               # the 'manifest.project-filter' config. Enable all Zephyr HALs with:
