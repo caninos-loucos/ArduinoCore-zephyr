@@ -20,10 +20,6 @@ for BOARD in $(get_boards); do
 		echo "error: missing '$BOARD.build.zephyr_target'" 1>&2
 		exit 1
 	fi
-	if [ -z "$HALS" ] ; then
-		echo "error: missing '$BOARD.build.zephyr_hals'" 1>&2
-		exit 1
-	fi
 
 	echo "{ \"board\": \"$BOARD\", \"variant\": \"$VARIANT\", \"target\": \"$TARGET\", \"args\": \"$ARGS\", \"hals\": \"$HALS\" }"
 done | jq -crs .

@@ -7,9 +7,9 @@ fi
 
 NEEDED_HALS=$(grep 'build.zephyr_hals=' boards.txt | cut -d '=' -f 2 | xargs -n 1 echo | sort -u)
 
-HAL_FILTER="-hal_.*"
+HAL_FILTER=""
 for hal in $NEEDED_HALS; do
-  HAL_FILTER="$HAL_FILTER,+$hal"
+  HAL_FILTER="$HAL_FILTER,$hal"
 done
 
 python3 -m venv venv
@@ -19,7 +19,7 @@ west init -l .
 west config manifest.project-filter -- "$HAL_FILTER"
 west update "$@"
 west zephyr-export
-pip install -r ../zephyr/scripts/requirements-base.txt
+west packages pip --install
 
-west sdk install --version 0.16.8 -t arm-zephyr-eabi riscv64-zephyr-elf
+west sdk install --version 0.17.4 -t arm-zephyr-eabi riscv64-zephyr-elf
 west blobs fetch $NEEDED_HALS
