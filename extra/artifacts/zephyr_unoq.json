@@ -1,0 +1,5 @@
+{
+  "name": "Arduino UNO Q Board",
+  "architecture": "zephyr",
+  "category": "Arduino"
+}

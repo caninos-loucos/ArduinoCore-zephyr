@@ -17,13 +17,13 @@ compiler.warning_flags.all=-Wall -Wextra
 
 compiler.path={build.compiler_path}
 compiler.c.cmd={build.crossprefix}gcc
-compiler.c.flags=-Os -v -g -c {compiler.warning_flags} {compiler.zephyr.macros} "@{compiler.zephyr.cflags_file}" -MMD -march={build.mcu} -mabi={build.abi}
+compiler.c.flags=-Os -v -g -c {compiler.define} {compiler.warning_flags} {compiler.zephyr.macros} "@{compiler.zephyr.cflags_file}" -MMD -march={build.mcu} {build.float-abi} {build.fpu}
 compiler.c.elf.cmd={build.crossprefix}g++
 compiler.c.elf.flags=-Wl,--gc-sections -march={build.mcu} -std=gnu++17
 compiler.S.cmd={build.crossprefix}g++
 compiler.S.flags=-c -x assembler-with-cpp -march={build.mcu}
 compiler.cpp.cmd={build.crossprefix}g++
-compiler.cpp.flags=-Os -v -g -c -std=gnu++17 {compiler.warning_flags} {compiler.zephyr.macros} "@{compiler.zephyr.cxxflags_file}" {compiler.zephyr.common_ldflags} {compiler.zephyr.extra_ldflags} {compiler.zephyr.common_cxxflags} {compiler.zephyr.extra_cxxflags} -MMD -march={build.mcu} -mabi={build.abi}
+compiler.cpp.flags=-Os -v -g -std=gnu++17 -c {compiler.define} {compiler.warning_flags} {compiler.zephyr.macros} "@{compiler.zephyr.cxxflags_file}" {compiler.zephyr.common_ldflags} {compiler.zephyr.extra_ldflags} {compiler.zephyr.common_cxxflags} {compiler.zephyr.extra_cxxflags} -MMD -march={build.mcu} {build.float-abi} {build.fpu}
 compiler.ar.cmd={build.crossprefix}ar
 compiler.ar.flags=rcs
 compiler.objcopy.cmd=
@@ -34,7 +34,7 @@ compiler.elf2hex.cmd={build.crossprefix}objcopy
 compiler.ldflags=
 compiler.libraries.ldflags=
 compiler.size.cmd={build.crossprefix}size
-compiler.define=-DARDUINO=
+compiler.define=-D_PICOLIBC_CTYPE_SMALL=1
 
 compiler.zephyr.includes_file={build.variant.path}/includes.txt
 compiler.zephyr.cflags_file={build.variant.path}/cflags.txt
@@ -50,13 +50,14 @@ compiler.zephyr.extra_ldflags=-lstdc++ -lsupc++
 build.extra_flags=
 build.extra_ldflags=
 build.link_mode=dynamic
+build.boot_mode=wait
 upload.extension=elf-zsk.bin
 
 build.ldscript.path={runtime.platform.path}/variants/_ldscripts
 build.link_command="{compiler.path}{compiler.c.elf.cmd}" "-L{build.path}" "-L{build.variant.path}" {compiler.c.elf.flags} {compiler.c.elf.extra_flags} {build.extra_flags} {build.extra_ldflags} {compiler.zephyr.common_ldflags} --specs=picolibc.specs --specs=nosys.specs {compiler.ldflags} {object_files} -Wl,--start-group "{build.path}/{archive_file}" {compiler.zephyr.extra_ldflags} {compiler.libraries.ldflags} -Wl,--end-group {build.link_args.{build.link_mode}}
 
 build.check_command-dynamic={build.link_command} {build.link_args.check-dynamic} -o "{build.path}/{build.project_name}_check.tmp"
-build.check_command-static=/bin/true
+build.check_command-static=true
 build.check_command-static.windows=cmd /C cd .
 build.combine_command={build.link_command} {build.link_args.build-{build.link_mode}} {build.link_args.build-common}
 
@@ -76,6 +77,8 @@ build.link_args.build-common="-Wl,-Map,{build.path}/{build.project_name}.map" -o
 build.zsk_args.debug=
 build.zsk_args.mode-dynamic=
 build.zsk_args.mode-static=-prelinked
+build.zsk_args.startup-mode-wait=
+build.zsk_args.startup-mode-immediate=-immediate
 
 # These can be overridden in platform.local.txt
 compiler.c.extra_flags=
@@ -105,13 +108,13 @@ build.zip.pattern={recipe.size.pattern}
 # -----------------------
 
 ## Compile c files
-recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -DARDUINO={runtime.ide.version} -D{build.board} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} -DARDUINO_ARCH_ZEPHYR {build.library_discovery_phase_flag} {build.extra_flags} {build.extra_ldflags} {compiler.c.extra_flags} "-I{build.core.path}/api/deprecated" "-I{build.core.path}/api/deprecated-avr-comp" {includes} "-iprefix{build.variant.path}" "@{compiler.zephyr.includes_file}" -o "{object_file}" "{source_file}"
+recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} -DARDUINO_ARCH_ZEPHYR {build.library_discovery_phase_flag} {build.extra_flags} {build.extra_ldflags} {compiler.c.extra_flags} "-I{build.core.path}/api/deprecated" "-I{build.core.path}/api/deprecated-avr-comp" {includes} "-iprefix{build.variant.path}" "@{compiler.zephyr.includes_file}" -o "{object_file}" "{source_file}"
 
 ## Compile c++ files
-recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} -DARDUINO={runtime.ide.version} -D{build.board} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} -DARDUINO_ARCH_ZEPHYR {build.library_discovery_phase_flag} {includes} {build.extra_flags} {build.extra_ldflags} {compiler.cpp.extra_flags} "-I{build.core.path}/api/deprecated" "-I{build.core.path}/api/deprecated-avr-comp" "-iprefix{build.variant.path}" "@{compiler.zephyr.includes_file}" "{source_file}" -o "{object_file}"
+recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} -DARDUINO_ARCH_ZEPHYR {build.library_discovery_phase_flag} {includes} {build.extra_flags} {build.extra_ldflags} {compiler.cpp.extra_flags} "-I{build.core.path}/api/deprecated" "-I{build.core.path}/api/deprecated-avr-comp" "-iprefix{build.variant.path}" "@{compiler.zephyr.includes_file}" "{source_file}" -o "{object_file}"
 
 ## Compile asm files
-recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} -DARDUINO={runtime.ide.version} -D{build.board} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} -DARDUINO_ARCH_ZEPHYR {includes} {build.extra_flags} {build.extra_ldflags} {compiler.cpp.extra_flags} "-I{build.core.path}/api/deprecated" "-I{build.core.path}/api/deprecated-avr-comp" "-iprefix{build.variant.path}" "@{compiler.zephyr.includes_file}" "{source_file}" -o "{object_file}"
+recipe.S.o.pattern="{compiler.path}{compiler.S.cmd}" {compiler.S.flags} -DARDUINO={runtime.ide.version} -DARDUINO_{build.board} -DARDUINO_ARCH_{build.arch} -DARDUINO_ARCH_ZEPHYR {includes} {build.extra_flags} {build.extra_ldflags} {compiler.cpp.extra_flags} "-I{build.core.path}/api/deprecated" "-I{build.core.path}/api/deprecated-avr-comp" "-iprefix{build.variant.path}" "@{compiler.zephyr.includes_file}" "{source_file}" -o "{object_file}"
 
 ## Create archives
 recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compiler.ar.extra_flags} "{archive_file_path}" "{object_file}"
@@ -132,8 +135,8 @@ recipe.objcopy.bin.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf
 recipe.objcopy.hex.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf2hex.hex.flags} {compiler.elf2hex.extra_flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.hex"
 
 ## Mangle the file
-recipe.hooks.objcopy.postobjcopy.1.pattern="{runtime.tools.zephyr-sketch-tool.path}/zephyr-sketch-tool" {build.zsk_args.debug} {build.zsk_args.mode-{build.link_mode}} "{build.path}/{build.project_name}.elf"
-recipe.hooks.objcopy.postobjcopy.2.pattern="{runtime.tools.zephyr-sketch-tool.path}/zephyr-sketch-tool" {build.zsk_args.debug} {build.zsk_args.mode-{build.link_mode}} "{build.path}/{build.project_name}.bin"
+recipe.hooks.objcopy.postobjcopy.1.pattern="{runtime.tools.zephyr-sketch-tool.path}/zephyr-sketch-tool" {build.zsk_args.debug} {build.zsk_args.mode-{build.link_mode}} {build.zsk_args.startup-mode-{build.boot_mode}} "{build.path}/{build.project_name}.elf"
+recipe.hooks.objcopy.postobjcopy.2.pattern="{runtime.tools.zephyr-sketch-tool.path}/zephyr-sketch-tool" {build.zsk_args.debug} {build.zsk_args.mode-{build.link_mode}} {build.zsk_args.startup-mode-{build.boot_mode}} "{build.path}/{build.project_name}.bin"
 
 ## Compute size
 recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/{build.project_name}.elf"
@@ -158,17 +161,17 @@ pluggable_monitor.required.serial=builtin:serial-monitor
 #
 # OpenOCD
 #
-tools.openocd.path={runtime.tools.openocd-0.11.0-arduino2.path}
+tools.openocd.path={runtime.tools.openocd-0.12.0-arduino1-static.path}
 tools.openocd.cmd=bin/openocd
 tools.openocd.cmd.windows=bin/openocd.exe
 
 tools.openocd.upload.params.verbose=-d2
 tools.openocd.upload.params.quiet=-d0
-tools.openocd.upload.pattern="{path}/{cmd}" {upload.verbose} -s "{path}/share/openocd/scripts/" {bootloader.programmer} {upload.transport} {bootloader.config} -c "telnet_port disabled; init; reset init; halt; adapter speed 10000; program {{build.path}/{build.project_name}.elf}; reset run; shutdown"
+tools.openocd.upload.pattern="{path}/{cmd}" {upload.verbose} -s "{path}/share/openocd/scripts/" {upload.programmer} {upload.config} -c "telnet_port disabled; init; reset init; halt; adapter speed 10000; flash write_image erase {{build.path}/{build.project_name}.{upload.extension}} {upload.address} bin; reset run; shutdown"
 
 tools.openocd.program.params.verbose=-d2
 tools.openocd.program.params.quiet=-d0
-tools.openocd.program.pattern="{path}/{cmd}" {program.verbose} -s "{path}/share/openocd/scripts/" {bootloader.programmer} {upload.transport} {bootloader.config} -c "telnet_port disabled; init; reset init; halt; adapter speed 10000; program {{build.path}/{build.project_name}.elf}; reset run; shutdown"
+tools.openocd.program.pattern="{path}/{cmd}" {program.verbose} -s "{path}/share/openocd/scripts/" {upload.programmer} {upload.config} -c "telnet_port disabled; init; reset init; halt; adapter speed 10000; flash write_image erase {{build.path}/{build.project_name}.{upload.extension}} {upload.address} bin; reset run; shutdown"
 
 tools.openocd.erase.params.verbose=-d2
 tools.openocd.erase.params.quiet=-d0
@@ -176,7 +179,7 @@ tools.openocd.erase.pattern=
 
 tools.openocd.bootloader.params.verbose=-d2
 tools.openocd.bootloader.params.quiet=-d0
-tools.openocd.bootloader.pattern="{path}/{cmd}" {bootloader.verbose} -s "{path}/share/openocd/scripts/" {bootloader.programmer} {upload.transport} {bootloader.config} -c "telnet_port disabled; init; reset init; halt; adapter speed 10000; {bootloader.extra_action.preflash}; program {{runtime.platform.path}/bootloaders/{bootloader.file}}; reset run; shutdown"
+tools.openocd.bootloader.pattern="{path}/{cmd}" {bootloader.verbose} -s "{path}/share/openocd/scripts/" {upload.programmer} {upload.config} -c "telnet_port disabled; init; reset init; halt; adapter speed 10000; program {{runtime.platform.path}/firmwares/{bootloader.file}}; reset run; shutdown"
 
 #
 # BOSSA
@@ -263,6 +266,29 @@ tools.adb.upload.params.quiet=
 tools.adb.upload.pattern="{path}/{cmd}" push "{build.path}/{build.project_name}.elf" "/tmp/arduino/m4-user-sketch.elf"
 
 #
+# REMOTEOCD
+#
+tools.remoteocd.path={runtime.tools.remoteocd.path}
+tools.remoteocd.cmd=remoteocd
+tools.remoteocd.upload.params.verbose=--verbose
+tools.remoteocd.upload.params.quiet=
+tools.remoteocd.upload.pattern="{path}/{cmd}" upload --adb-path "{runtime.tools.adb.path}/adb" -s "{upload.port.properties.serialNumber}" -f "{build.variant.path}/{openocd_cfg}" "{upload.verbose}" "{build.path}/{build.project_name}.{upload.extension}"
+
+tools.remoteocd.bootloader.params.verbose=--verbose
+tools.remoteocd.bootloader.params.quiet=
+tools.remoteocd.erase.pattern=
+tools.remoteocd.bootloader.pattern="{path}/{cmd}" upload --adb-path "{runtime.tools.adb.path}/adb" -s "{upload.port.properties.serialNumber}" -f "{build.variant.path}/flash_bootloader.cfg" "{upload.verbose}" "{runtime.platform.path}/firmwares/{bootloader.file}"
+
+tools.remoteocd_network.upload.protocol=network
+tools.remoteocd_network.upload.field.password=Password
+tools.remoteocd_network.upload.field.password.secret=true
+tools.remoteocd_network.path={runtime.tools.remoteocd.path}
+tools.remoteocd_network.cmd=remoteocd
+tools.remoteocd_network.upload.params.verbose=--verbose
+tools.remoteocd_network.upload.params.quiet=
+tools.remoteocd_network.upload.pattern="{path}/{cmd}" upload -a "{upload.port.address}" --password "{upload.field.password}" -f "{build.variant.path}/{openocd_cfg}" "{upload.verbose}" "{build.path}/{build.project_name}.{upload.extension}"
+
+#
 # PYOCD WRAPPER
 #
 
@@ -304,7 +330,7 @@ tools.gdb.path={runtime.tools.arm-none-eabi-gcc-7-2017q4.path}/bin/
 tools.gdb.cmd=arm-none-eabi-gdb
 tools.gdb.cmd.windows=arm-none-eabi-gdb.exe
 
-debug.executable={build.path}/{build.project_name}.elf
+debug.executable={build.path}/{build.project_name}_debug.elf
 debug.toolchain=gcc
 debug.toolchain.path={runtime.tools.arm-none-eabi-gcc-7-2017q4.path}/bin/
 debug.toolchain.prefix=arm-none-eabi
@@ -319,3 +345,6 @@ debug.cortex-debug.custom.postAttachCommands.3=c
 debug.cortex-debug.custom.overrideRestartCommands.0=monitor reset halt
 debug.cortex-debug.custom.overrideRestartCommands.1=monitor gdb_sync
 debug.cortex-debug.custom.overrideRestartCommands.2=c
+
+debug.server.openocd.path={runtime.tools.openocd-0.12.0-arduino1-static.path}/bin/openocd
+debug.server.openocd.scripts_dir={runtime.tools.openocd-0.12.0-arduino1-static.path}/share/openocd/scripts/

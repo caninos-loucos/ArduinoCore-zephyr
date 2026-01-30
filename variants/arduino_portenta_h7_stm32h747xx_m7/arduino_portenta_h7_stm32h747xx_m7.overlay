@@ -248,6 +248,12 @@
 		zephyr,console = &usart6;
 		zephyr,shell-uart = &usart6;
 		zephyr,cdc-acm-uart0 = &usart6;
+		zephyr,log-uart = &log_uarts;
+	};
+
+	log_uarts: log_uarts {
+		compatible = "zephyr,log-uart";
+		uarts = <&usart6 &board_cdc_acm_uart>;
 	};
 
 	/* used to overcome problems with _C analog pins */
@@ -264,6 +270,7 @@
 	soc {
 		flash-controller@52002000 {
 			flash0: flash@8000000 {
+				/delete-node/ partitions;
 				compatible = "st,stm32-nv-flash", "soc-nv-flash";
 				write-block-size = <32>;
 				erase-block-size = <DT_SIZE_K(128)>;
@@ -278,6 +285,17 @@
 					#address-cells = <1>;
 					#size-cells = <1>;
 
+					boot_partition: partition@0 {
+							label = "mcuboot";
+							reg = <0x00000000 0x00040000>;
+							read-only;
+					};
+
+					slot0_partition: partition@40000 {
+							label = "image-0";
+							reg = <0x00040000 0x000A0000>;
+					};
+
 					user_sketch: partition@e0000 {
 						reg = <0x0E0000 0x20000>;
 					};
@@ -286,6 +304,11 @@
 		};
 	};
 };
+
+
+/* Include common flash filesystem configuration */
+qspi_flash: &mx25l12833f {};
+#include "../common/arduino_flash_fs.dtsi"
 
 / {
 	zephyr,user {
@@ -320,7 +343,8 @@
 				    <&gpiok 6 0>,		/* LEDG */
 				    <&gpiok 7 0>;		/* LEDB */
 
-		builtin-led-gpios = <&gpiok 5 0>,
+		builtin-led-gpios = <&gpiok 6 0>,
+				    <&gpiok 5 0>,
 				    <&gpiok 6 0>,
 				    <&gpiok 7 0>;
 

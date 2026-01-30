@@ -6,7 +6,12 @@
 
 # 🚧 Arduino Core for Zephyr
 
-This repository contains the official implementation of **Arduino Core** for Zephyr RTOS based board.
+This repository is a downstream fork of the [Arduino Core for Zephyr RTOS-based
+boards](https://github.com/zephyrproject-rtos/arduino-core-zephyr) that
+includes support for Arduino software tools, allowing it to be seamlessly used
+by the [Arduino IDE](https://docs.arduino.cc/software/ide/),
+[Arduino CLI](https://docs.arduino.cc/arduino-cli/) and
+[Arduino AppLab](https://docs.arduino.cc/software/app-lab/).
 
 ## 🧐 What is Zephyr? 
 
@@ -226,7 +231,14 @@ This can also be performed via the "Burn bootloader" action in the IDE if the co
 
 ### Using the Core in Arduino IDE/CLI
 
-After running the `bootstrap.sh` script, you can symlink the core to `$sketchbook/hardware/arduino-git/zephyr`. Once linked, it will appear in the IDE/CLI, and the board's Fully Qualified Board Name (FQBN) will be formatted as `arduino-git:zephyr:name_from_boards_txt`.
+After running the `bootstrap.sh` script, you can create a symlink from the
+`ArduinoCore-zephyr` folder to `${sketchbook}/hardware/arduino-git/zephyr`, so
+that the `boards.txt` file in this repository will be also available as
+`${sketchbook}/hardware/arduino-git/zephyr/boards.txt`.
+
+Once this is done, your development folder will appear in the IDE/CLI package
+list as `arduino-git:zephyr`, and the Fully Qualified Board Name (FQBN) to use
+will be `arduino-git:zephyr:name_from_boards_txt`.
 
 Remember to also install and/or update the officially published core in the IDE Board Manager to get the latest tools and dependencies. 
 [⚙️ Installation](#️-installation).

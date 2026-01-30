@@ -8,15 +8,17 @@
 #include <math.h>
 #include <zephyr/kernel.h>
 
-#define FORCE_EXPORT_SYM(name) \
-       extern void name(void); \
-       EXPORT_SYMBOL(name);
+#define FORCE_EXPORT_SYM(name)                                                                     \
+	extern void name(void);                                                                        \
+	EXPORT_SYMBOL(name);
 
 EXPORT_SYMBOL(strrchr);
 EXPORT_SYMBOL(strstr);
 EXPORT_SYMBOL(strncmp);
 EXPORT_SYMBOL(strncpy);
 EXPORT_SYMBOL(strcasecmp);
+EXPORT_SYMBOL(strtod);
+EXPORT_SYMBOL(strtol);
 EXPORT_SYMBOL(strtoul);
 EXPORT_SYMBOL(strcmp);
 EXPORT_SYMBOL(strlen);
@@ -25,6 +27,7 @@ EXPORT_SYMBOL(strcat);
 EXPORT_SYMBOL(memmove);
 
 EXPORT_SYMBOL(k_malloc);
+EXPORT_SYMBOL(k_free);
 EXPORT_SYMBOL(malloc);
 EXPORT_SYMBOL(realloc);
 EXPORT_SYMBOL(calloc);
@@ -48,13 +51,30 @@ EXPORT_SYMBOL(isupper);
 EXPORT_SYMBOL(islower);
 EXPORT_SYMBOL(isxdigit);
 
+// From math.h
+EXPORT_SYMBOL(acos);
+EXPORT_SYMBOL(acosf);
+EXPORT_SYMBOL(asin);
+EXPORT_SYMBOL(asinf);
+EXPORT_SYMBOL(atan);
 EXPORT_SYMBOL(atan2);
 EXPORT_SYMBOL(atan2f);
 EXPORT_SYMBOL(atanf);
-EXPORT_SYMBOL(asinf);
-EXPORT_SYMBOL(acosf);
+EXPORT_SYMBOL(cos);
+EXPORT_SYMBOL(cosf);
+EXPORT_SYMBOL(exp);
+EXPORT_SYMBOL(exp2);
+EXPORT_SYMBOL(log);
+EXPORT_SYMBOL(logf);
+EXPORT_SYMBOL(log2);
+EXPORT_SYMBOL(log10);
+EXPORT_SYMBOL(pow);
+EXPORT_SYMBOL(sin);
+EXPORT_SYMBOL(sinf);
 EXPORT_SYMBOL(sqrt);
 EXPORT_SYMBOL(sqrtf);
+EXPORT_SYMBOL(tan);
+EXPORT_SYMBOL(tanf);
 
 EXPORT_SYMBOL(k_sched_lock);
 EXPORT_SYMBOL(k_sched_unlock);
@@ -64,15 +84,26 @@ EXPORT_SYMBOL(usb_enable);
 EXPORT_SYMBOL(usb_disable);
 #endif
 
+#if CONFIG_LOG
+// EXPORT_SYMBOL(z_log_msg_runtime_vcreate);
+FORCE_EXPORT_SYM(log_const_sketch)
+#endif
+
+#if defined(CONFIG_LOG_RUNTIME_FILTERING)
+FORCE_EXPORT_SYM(log_dynamic_sketch)
+#endif
+
 #if defined(CONFIG_NETWORKING)
 FORCE_EXPORT_SYM(net_if_foreach);
 FORCE_EXPORT_SYM(net_if_down);
+FORCE_EXPORT_SYM(net_if_up);
 FORCE_EXPORT_SYM(net_if_get_by_iface);
 #if defined(CONFIG_NET_IPV4)
 FORCE_EXPORT_SYM(net_if_ipv4_maddr_add);
 FORCE_EXPORT_SYM(net_if_ipv4_maddr_join);
 FORCE_EXPORT_SYM(net_if_ipv4_set_gw);
 FORCE_EXPORT_SYM(net_if_ipv4_addr_add);
+FORCE_EXPORT_SYM(net_if_ipv4_set_netmask);
 FORCE_EXPORT_SYM(net_if_ipv4_set_netmask_by_addr);
 #endif
 FORCE_EXPORT_SYM(net_if_lookup_by_dev);
@@ -80,6 +111,7 @@ FORCE_EXPORT_SYM(net_if_lookup_by_dev);
 
 #if defined(CONFIG_NET_L2_ETHERNET)
 FORCE_EXPORT_SYM(_net_l2_ETHERNET);
+FORCE_EXPORT_SYM(net_mgmt_NET_REQUEST_ETHERNET_SET_MAC_ADDRESS);
 #endif
 
 #if defined(CONFIG_NET_DHCPV4)
@@ -100,6 +132,7 @@ FORCE_EXPORT_SYM(net_mgmt_event_wait_on_iface);
 
 #if defined(CONFIG_MBEDTLS)
 FORCE_EXPORT_SYM(tls_credential_add);
+FORCE_EXPORT_SYM(tls_credential_get);
 #endif
 
 #if defined(CONFIG_WIFI)
@@ -162,11 +195,12 @@ FORCE_EXPORT_SYM(close);
 FORCE_EXPORT_SYM(accept);
 FORCE_EXPORT_SYM(bind);
 FORCE_EXPORT_SYM(listen);
-EXPORT_SYMBOL(exit);
 FORCE_EXPORT_SYM(inet_pton);
 FORCE_EXPORT_SYM(sendto);
 FORCE_EXPORT_SYM(recvfrom);
 FORCE_EXPORT_SYM(setsockopt);
+FORCE_EXPORT_SYM(getpeername);
+FORCE_EXPORT_SYM(inet_ntop);
 #endif
 
 #if defined(CONFIG_CDC_ACM_DTE_RATE_CALLBACK_SUPPORT)
@@ -194,14 +228,8 @@ FORCE_EXPORT_SYM(shared_multi_heap_alloc);
 EXPORT_SYMBOL(k_timer_init);
 EXPORT_SYMBOL(k_fatal_halt);
 EXPORT_SYMBOL(k_work_schedule);
-//FORCE_EXPORT_SYM(k_timer_user_data_set);
-//FORCE_EXPORT_SYM(k_timer_start);
-
-EXPORT_SYMBOL(sin);
-EXPORT_SYMBOL(cos);
-EXPORT_SYMBOL(tan);
-EXPORT_SYMBOL(atan);
-EXPORT_SYMBOL(pow);
+// FORCE_EXPORT_SYM(k_timer_user_data_set);
+// FORCE_EXPORT_SYM(k_timer_start);
 
 EXPORT_SYMBOL(puts);
 EXPORT_SYMBOL(putchar);
@@ -209,7 +237,15 @@ EXPORT_SYMBOL(printf);
 EXPORT_SYMBOL(sprintf);
 EXPORT_SYMBOL(snprintf);
 EXPORT_SYMBOL(cbvprintf);
+EXPORT_SYMBOL(vsnprintf);
 FORCE_EXPORT_SYM(abort);
+EXPORT_SYMBOL(sscanf);
+EXPORT_SYMBOL(exit);
+FORCE_EXPORT_SYM(_exit);
+FORCE_EXPORT_SYM(__assert_no_args);
+EXPORT_SYMBOL(stdin);
+EXPORT_SYMBOL(stdout);
+EXPORT_SYMBOL(stderr);
 
 #if defined(CONFIG_RING_BUFFER)
 EXPORT_SYMBOL(ring_buf_get);
@@ -378,6 +414,50 @@ FORCE_EXPORT_SYM(__bswapsi2);
 FORCE_EXPORT_SYM(__bswapdi2);
 #endif
 
-#if defined (CONFIG_CPP)
+#if defined(CONFIG_CPP)
 FORCE_EXPORT_SYM(__cxa_pure_virtual);
+#endif
+
+#if defined(CONFIG_BOARD_ARDUINO_UNO_Q)
+FORCE_EXPORT_SYM(matrixBegin);
+FORCE_EXPORT_SYM(matrixWrite);
+FORCE_EXPORT_SYM(matrixPlay);
+FORCE_EXPORT_SYM(matrixGrayscaleWrite);
+FORCE_EXPORT_SYM(matrixSetGrayscaleBits);
+FORCE_EXPORT_SYM(matrixEnd);
+#endif
+
+#if defined(CONFIG_FLASH)
+FORCE_EXPORT_SYM(flash_area_open);
+FORCE_EXPORT_SYM(flash_area_read);
+FORCE_EXPORT_SYM(flash_area_write);
+FORCE_EXPORT_SYM(flash_area_erase);
+FORCE_EXPORT_SYM(flash_area_close);
+#endif
+
+#if defined(CONFIG_FILE_SYSTEM)
+FORCE_EXPORT_SYM(fs_open);
+FORCE_EXPORT_SYM(fs_close);
+FORCE_EXPORT_SYM(fs_unlink);
+FORCE_EXPORT_SYM(fs_rename);
+FORCE_EXPORT_SYM(fs_read);
+FORCE_EXPORT_SYM(fs_write);
+FORCE_EXPORT_SYM(fs_seek);
+FORCE_EXPORT_SYM(fs_tell);
+FORCE_EXPORT_SYM(fs_truncate);
+FORCE_EXPORT_SYM(fs_sync);
+FORCE_EXPORT_SYM(fs_mkdir);
+FORCE_EXPORT_SYM(fs_opendir);
+FORCE_EXPORT_SYM(fs_readdir);
+FORCE_EXPORT_SYM(fs_closedir);
+FORCE_EXPORT_SYM(fs_mount);
+FORCE_EXPORT_SYM(fs_unmount);
+FORCE_EXPORT_SYM(fs_readmount);
+FORCE_EXPORT_SYM(fs_stat);
+FORCE_EXPORT_SYM(fs_statvfs);
+#if defined(CONFIG_FILE_SYSTEM_MKFS)
+FORCE_EXPORT_SYM(fs_mkfs);
+#endif
+FORCE_EXPORT_SYM(fs_register);
+FORCE_EXPORT_SYM(fs_unregister);
 #endif

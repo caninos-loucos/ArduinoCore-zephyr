@@ -6,7 +6,7 @@
 
 #include "zephyr/sys/printk.h"
 #include <zephyr/logging/log.h>
-LOG_MODULE_REGISTER(app);
+LOG_MODULE_REGISTER(sketch);
 
 #include <zephyr/kernel.h>
 #include <zephyr/storage/flash_map.h>
@@ -14,8 +14,11 @@ LOG_MODULE_REGISTER(app);
 #include <zephyr/llext/buf_loader.h>
 #include <zephyr/shell/shell.h>
 #include <zephyr/shell/shell_uart.h>
+#include <zephyr/logging/log_ctrl.h>
 
 #include <stdlib.h>
+#include <zephyr/drivers/gpio.h>
+#include <zephyr/drivers/uart.h>
 #include <zephyr/drivers/uart/cdc_acm.h>
 #include <zephyr/drivers/uart.h>
 #include <zephyr/usb/usb_device.h>
@@ -29,16 +32,39 @@ struct sketch_header_v1 {
 	uint8_t flags;  // @ 0x0e
 } __attribute__((packed));
 
-#define SKETCH_FLAG_DEBUG  0x01
-#define SKETCH_FLAG_LINKED 0x02
+#define SKETCH_FLAG_DEBUG     0x01
+#define SKETCH_FLAG_LINKED    0x02
+#define SKETCH_FLAG_IMMEDIATE 0x04
 
-#define TARGET_HAS_USB_CDC_SHELL                                                                   \
-	DT_NODE_HAS_PROP(DT_PATH(zephyr_user), cdc_acm) && CONFIG_SHELL &&CONFIG_USB_DEVICE_STACK
+#define TARGET_HAS_USB_CDC                                                                         \
+	DT_NODE_HAS_PROP(DT_PATH(zephyr_user), cdc_acm) &&                                             \
+		(CONFIG_USB_DEVICE_STACK || CONFIG_USB_DEVICE_STACK_NEXT)
 
-#if TARGET_HAS_USB_CDC_SHELL
+#if TARGET_HAS_USB_CDC
 const struct device *const usb_dev =
 	DEVICE_DT_GET(DT_PHANDLE_BY_IDX(DT_PATH(zephyr_user), cdc_acm, 0));
 
+#if CONFIG_USB_DEVICE_STACK_NEXT
+#include <zephyr/usb/usbd.h>
+struct usbd_context *usbd_init_device(usbd_msg_cb_t msg_cb);
+
+int usb_enable(usb_dc_status_callback status_cb) {
+	int err;
+	struct usbd_context *_usbd = usbd_init_device(NULL);
+	if (_usbd == NULL) {
+		return -ENODEV;
+	}
+	if (!usbd_can_detect_vbus(_usbd)) {
+		err = usbd_enable(_usbd);
+		if (err) {
+			return err;
+		}
+	}
+	return 0;
+}
+#endif
+
+#if CONFIG_SHELL
 static int enable_shell_usb(void) {
 	bool log_backend = CONFIG_SHELL_BACKEND_SERIAL_LOG_LEVEL > 0;
 	uint32_t level = (CONFIG_SHELL_BACKEND_SERIAL_LOG_LEVEL > LOG_LEVEL_DBG) ?
@@ -50,6 +76,7 @@ static int enable_shell_usb(void) {
 
 	return 0;
 }
+#endif
 #endif
 
 #ifdef CONFIG_USERSPACE
@@ -87,17 +114,97 @@ static int loader(const struct shell *sh) {
 		return rc;
 	}
 
+	bool sketch_valid = true;
 	struct sketch_header_v1 *sketch_hdr = (struct sketch_header_v1 *)(header + 7);
 	if (sketch_hdr->ver != 0x1 || sketch_hdr->magic != 0x2341) {
 		printk("Invalid sketch header\n");
-		return -EINVAL;
+		sketch_valid = false;
+		// This is not a valid sketch, but try to start a shell anyway
 	}
+
+#if defined(CONFIG_BOARD_ARDUINO_UNO_Q)
+	void matrixBegin(void);
+	void matrixEnd(void);
+	void matrixPlay(uint8_t *buf, uint32_t len);
+	void matrixSetGrayscaleBits(uint8_t _max);
+	void matrixGrayscaleWrite(uint8_t *buf);
+#include "bootanimation.h"
+
+	uint8_t *_bootanimation = (uint8_t *)bootanimation;
+	size_t _bootanimation_len = bootanimation_len;
+	uint8_t *_bootanimation_end = (uint8_t *)bootanimation_end;
+	size_t _bootanimation_end_len = bootanimation_end_len;
+
+	__attribute__((packed)) struct bootanimation_user_data {
+		size_t magic; // must be 0xBA for bootanimation
+		size_t len_loop;
+		size_t len_end;
+		size_t empty;
+		char buf_loop;
+	};
+
+	uintptr_t bootanimation_addr = DT_REG_ADDR(DT_GPARENT(DT_NODELABEL(bootanimation))) +
+								   DT_REG_ADDR(DT_NODELABEL(bootanimation));
+
+	struct bootanimation_user_data *user_bootanimation =
+		(struct bootanimation_user_data *)bootanimation_addr;
+	if (user_bootanimation->magic == 0xBA) {
+		_bootanimation = &(user_bootanimation->buf_loop);
+		_bootanimation_len = user_bootanimation->len_loop;
+		_bootanimation_end_len = user_bootanimation->len_end;
+		_bootanimation_end = _bootanimation + user_bootanimation->len_loop;
+	}
+
+	if ((!sketch_valid) || !(sketch_hdr->flags & SKETCH_FLAG_IMMEDIATE)) {
+		// Start the bootanimation while waiting for the MPU to boot
+		const struct gpio_dt_spec spec =
+			GPIO_DT_SPEC_GET_BY_IDX(DT_PATH(zephyr_user), control_gpios, 0);
+
+		gpio_pin_configure_dt(&spec, GPIO_INPUT | GPIO_PULL_DOWN);
+		k_sleep(K_MSEC(200));
+		uint8_t *ram_firmware = NULL;
+		uint32_t *ram_start = (uint32_t *)0x20000000;
+		if (!sketch_valid) {
+			ram_firmware = (uint8_t *)malloc(64 * 1024);
+			if (!ram_firmware) {
+				printk("Failed to allocate RAM for firmware\n");
+				return -ENOMEM;
+			}
+			memset(ram_firmware, 0, 64 * 1024);
+			*ram_start = (uint32_t)&ram_firmware[0];
+		}
+		if (gpio_pin_get_dt(&spec) == 0) {
+			matrixBegin();
+			matrixSetGrayscaleBits(8);
+			while (gpio_pin_get_dt(&spec) == 0) {
+				matrixPlay(_bootanimation, _bootanimation_len);
+			}
+			matrixPlay(_bootanimation_end, _bootanimation_end_len);
+			uint8_t _framebuffer[104] = {0};
+			matrixGrayscaleWrite(_framebuffer);
+			k_sleep(K_MSEC(10));
+			matrixEnd();
+		}
+		while (!sketch_valid) {
+			__asm__("bkpt");
+			// poll the first bytes, if filled try to use them for booting
+			sketch_hdr = (struct sketch_header_v1 *)(ram_firmware + 7);
+			if (sketch_hdr->ver == 0x1 && sketch_hdr->magic == 0x2341) {
+				// Found valid data, use it for booting
+				base_addr = (uintptr_t)ram_firmware;
+				*ram_start = 0;
+				sketch_valid = true;
+			}
+		}
+	}
+#endif
 
 	size_t sketch_buf_len = sketch_hdr->len;
 	printk("Sketch len is %d\n", sketch_buf_len);
 
-#if TARGET_HAS_USB_CDC_SHELL
-	int debug = sketch_hdr->flags & SKETCH_FLAG_DEBUG;
+#if TARGET_HAS_USB_CDC
+	int debug = (!sketch_valid) || (sketch_hdr->flags & SKETCH_FLAG_DEBUG);
+#if CONFIG_SHELL
 	if (debug && strcmp(k_thread_name_get(k_current_get()), "main") == 0) {
 		// disables default shell on UART
 		shell_uninit(shell_backend_uart_get_ptr(), NULL);
@@ -112,6 +219,22 @@ static int loader(const struct shell *sh) {
 		enable_shell_usb();
 		return 0;
 	}
+#elif CONFIG_LOG
+#if !CONFIG_USB_DEVICE_INITIALIZE_AT_BOOT
+	if (debug) {
+		usb_enable(NULL);
+	}
+#endif
+	for (int i = 0; i < log_backend_count_get(); i++) {
+		const struct log_backend *backend;
+		backend = log_backend_get(i);
+		log_backend_init(backend);
+		log_backend_enable(backend, backend->cb->ctx, CONFIG_LOG_DEFAULT_LEVEL);
+		if (!debug) {
+			break;
+		}
+	}
+#endif
 #endif
 
 	if (sketch_hdr->flags & SKETCH_FLAG_LINKED) {
@@ -142,6 +265,7 @@ static int loader(const struct shell *sh) {
 
 	if (!sketch_buf) {
 		printk("Unable to allocate %d bytes\n", sketch_buf_len);
+		return -ENOMEM;
 	}
 
 	rc = flash_area_read(fa, 0, sketch_buf, sketch_buf_len);

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 if [ ! -f platform.txt ]; then
   echo Launch this script from the root core folder as ./extra/bootstrap.sh
   exit 2
@@ -21,4 +23,4 @@ west update "$@"
 west zephyr-export
 west packages pip --install
 
-west sdk install --version 0.17.4 -t arm-zephyr-eabi riscv64-zephyr-elf
+west sdk install --version 0.16.8 -t arm-zephyr-eabi riscv64-zephyr-elf

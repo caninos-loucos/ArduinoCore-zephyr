@@ -32,8 +32,8 @@ public:
 		return ret;
 	}
 #if defined(CONFIG_NET_SOCKETS_SOCKOPT_TLS)
-	int connectSSL(const char *host, uint16_t port, char *cert) {
-		auto ret = ZephyrSocketWrapper::connectSSL((char *)host, port, cert);
+	int connectSSL(const char *host, uint16_t port, const char *cert) {
+		auto ret = ZephyrSocketWrapper::connectSSL(host, port, cert);
 		if (ret) {
 			_connected = true;
 		}
@@ -94,6 +94,10 @@ public:
 
 	operator bool() {
 		return sock_fd != -1;
+	}
+
+	String remoteIP() {
+		return ZephyrSocketWrapper::remoteIP();
 	}
 	friend class ZephyrServer;
 };

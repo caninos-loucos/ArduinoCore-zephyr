@@ -5,6 +5,17 @@
 	};
 };
 
+/{
+	chosen {
+		zephyr,log-uart = &log_uarts;
+	};
+
+	log_uarts: log_uarts {
+		compatible = "zephyr,log-uart";
+		uarts = <&uart9 &board_cdc_acm_uart>;
+	};
+};
+
 &flash0 {
 	partitions {
 		mcuboot: partition@0 {
@@ -22,6 +33,10 @@
 	};
 };
 
+&flash1 {
+    // Conflicts with "storage" partition
+	/delete-node/ partitions;
+};
 
 &sci7 {
 	pinctrl-0 = <&sci7_default>;
@@ -131,16 +146,16 @@
 		zephyr,resolution = <12>;
 	};
 
-	a6: channel@e {
-		reg = <14>;
+	a6: channel@c {
+		reg = <12>;
 		zephyr,gain = "ADC_GAIN_1";
 		zephyr,reference = "ADC_REF_INTERNAL";
 		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
 		zephyr,resolution = <12>;
 	};
 
-	a5: channel@f {
-		reg = <15>;
+	a5: channel@d {
+		reg = <13>;
 		zephyr,gain = "ADC_GAIN_1";
 		zephyr,reference = "ADC_REF_INTERNAL";
 		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
@@ -263,7 +278,8 @@
 
 
 
-		builtin-led-gpios = <&ioport1 7 GPIO_ACTIVE_LOW>,
+		builtin-led-gpios = <&ioport4 0 GPIO_ACTIVE_LOW>,
+                        <&ioport1 7 GPIO_ACTIVE_LOW>,
                         <&ioport4 0 GPIO_ACTIVE_LOW>,
                         <&ioport8 0 GPIO_ACTIVE_LOW>;
 
@@ -294,3 +310,7 @@
 				    <&ioport0 0 0>;
 	};
 };
+
+/* Include common flash filesystem configuration */
+qspi_flash: &at25sf128a {};
+#include "../common/arduino_flash_fs.dtsi"

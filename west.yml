@@ -35,6 +35,7 @@ manifest:
                   - nanopb
                   - lvgl
                   - zcbor
+                  - fatfs
                   - hal_nxp
                   - hal_nordic
                   - hal_stm32
