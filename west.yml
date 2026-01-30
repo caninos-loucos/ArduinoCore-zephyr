@@ -10,7 +10,7 @@ manifest:
 
     remotes:
         - name: caninos
-          url-base: https://github.com/anacforcelli
+          url-base: https://github.com/caninos-loucos
         - name: zephyrproject-rtos
           url-base: https://github.com/zephyrproject-rtos
         - name: arduino
@@ -21,9 +21,9 @@ manifest:
           url-base: https://github.com/pillo79
 
     projects:
-        - name: zephyr
+        - name: zephyr-puppy-arduino
           remote: caninos
-          revision: main
+          revision: arduino-hotfix
           import:
               name-allowlist:
                   - littlefs
