@@ -23,6 +23,8 @@
 		serials = <&uart0>;
 		i2cs = <&i2c0>;
 		spis = <&spi0>;
+        pwms = <&pwm2 0 10000000 0>;
+        pwm-pin-gpios = <&arduino_header 14 GPIO_ACTIVE_HIGH>;
 	};
 };
 
