@@ -69,8 +69,7 @@ void arduino::ZephyrSerial::begin(unsigned long baud, uint16_t conf) {
 }
 
 void arduino::ZephyrSerial::IrqHandler() {
-	uint8_t buf[8];
-	int length;
+	uint8_t buf;
 	int ret = 0;
 
 	if (!uart_irq_update(uart)) {
@@ -78,9 +77,8 @@ void arduino::ZephyrSerial::IrqHandler() {
 	}
 
 	k_sem_take(&rx.sem, K_NO_WAIT);
-	while (uart_irq_rx_ready(uart) && ((length = uart_fifo_read(uart, buf, sizeof(buf))) > 0)) {
-		length = min(sizeof(buf), static_cast<size_t>(length));
-		ret = ring_buf_put(&rx.ringbuf, &buf[0], length);
+	while (uart_irq_rx_ready(uart) && uart_fifo_read(uart, &buf, sizeof(buf))) {
+		ret = ring_buf_put(&rx.ringbuf, &buf, sizeof(buf));
 
 		if (ret < 0) {
 			break;
@@ -94,15 +92,14 @@ void arduino::ZephyrSerial::IrqHandler() {
 		uart_irq_tx_disable(uart);
 	}
 
-	while (uart_irq_tx_ready(uart) && ((length = ring_buf_size_get(&tx.ringbuf)) > 0)) {
-		length = min(sizeof(buf), static_cast<size_t>(length));
-		ring_buf_peek(&tx.ringbuf, &buf[0], length);
+	while (uart_irq_tx_ready(uart) && ring_buf_size_get(&tx.ringbuf)) {
+		ring_buf_peek(&tx.ringbuf, &buf, sizeof(buf));
 
-		ret = uart_fifo_fill(uart, &buf[0], length);
+		ret = uart_fifo_fill(uart, &buf, sizeof(buf));
 		if (ret < 0) {
 			break;
 		} else {
-			ring_buf_get(&tx.ringbuf, &buf[0], ret);
+			ring_buf_get(&tx.ringbuf, &buf, ret);
 		}
 	}
 	k_sem_give(&tx.sem);
