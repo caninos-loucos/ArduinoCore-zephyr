@@ -579,7 +579,8 @@ poodle.build.crossprefix=riscv64-zephyr-elf-
 poodle.build.compiler_path={runtime.tools.riscv64-zephyr-elf-0.16.8.path}/bin/
 poodle.compiler.zephyr=
 
-poodle.build.postbuild.cmd="{tools.imgtool.path}/{tools.imgtool.cmd}" exit
+#poodle.recipe.hooks.objcopy.postobjcopy.3.pattern=python3 "{runtime.platform.path}"/extra/binary_concatenate.py -a 0x2e000 -s 0x40000 -o "{build.path}/{build.project_name}-merged.bin" --file1 {runtime.platform.path}/firmwares/poodle-toy-v1_puppy_v2.bin --file2 "{build.path}/{build.project_name}.elf-zsk.bin"
+
 
 ##########################################################################################
 
