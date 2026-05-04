@@ -17,13 +17,13 @@ compiler.warning_flags.all=-Wall -Wextra
 
 compiler.path={build.compiler_path}
 compiler.c.cmd={build.crossprefix}gcc
-compiler.c.flags=-g -c {compiler.define} {compiler.warning_flags} {compiler.zephyr.macros} "@{compiler.zephyr.cflags_file}" -MMD -march={build.mcu} {build.float-abi} {build.fpu}
+compiler.c.flags=-g -c {compiler.define} {compiler.warning_flags} {compiler.zephyr.macros} "@{compiler.zephyr.cflags_file}" -MMD {build.mcu} {build.float-abi} {build.fpu}
 compiler.c.elf.cmd={build.crossprefix}g++
-compiler.c.elf.flags=-Wl,--gc-sections -march={build.mcu} -std=gnu++17
+compiler.c.elf.flags=-Wl,--gc-sections {build.mcu} -std=gnu++17
 compiler.S.cmd={build.crossprefix}g++
-compiler.S.flags=-c -x assembler-with-cpp -march={build.mcu}
+compiler.S.flags=-c -x assembler-with-cpp {build.mcu}
 compiler.cpp.cmd={build.crossprefix}g++
-compiler.cpp.flags=-g -Os -std=gnu++17 -c {compiler.define} {compiler.warning_flags} {compiler.zephyr.macros} "@{compiler.zephyr.cxxflags_file}" {compiler.zephyr.common_ldflags} {compiler.zephyr.extra_ldflags} {compiler.zephyr.common_cxxflags} {compiler.zephyr.extra_cxxflags} -MMD -march={build.mcu} {build.float-abi} {build.fpu}
+compiler.cpp.flags=-g -Os -std=gnu++17 -c {compiler.define} {compiler.warning_flags} {compiler.zephyr.macros} "@{compiler.zephyr.cxxflags_file}" {compiler.zephyr.common_ldflags} {compiler.zephyr.extra_ldflags} {compiler.zephyr.common_cxxflags} {compiler.zephyr.extra_cxxflags} -MMD {build.mcu} {build.float-abi} {build.fpu}
 compiler.ar.cmd={build.crossprefix}ar
 compiler.ar.flags=rcs
 compiler.objcopy.cmd=
@@ -348,3 +348,23 @@ debug.cortex-debug.custom.overrideRestartCommands.2=c
 
 debug.server.openocd.path={runtime.tools.openocd-0.12.0-arduino1-static.path}/bin/openocd
 debug.server.openocd.scripts_dir={runtime.tools.openocd-0.12.0-arduino1-static.path}/share/openocd/scripts/
+
+#
+# mcumgr-toolkit
+#
+
+tools.mcumgr-toolkit.path={runtime.tools.mcumgr-toolkit.path}
+tools.mcumgr-toolkit.cmd=mcumgrctl
+tools.mcumgr-toolkit.cmd.windows=mcumgrctl.exe
+tools.mcumgr-toolkit.upload.protocol=serial
+tools.mcumgr-toolkit.upload.params.verbose=
+tools.mcumgr-toolkit.upload.params.quiet=
+tools.mcumgr-toolkit.upload.pattern="{path}/{cmd}" -s {serial.port} image upload "{build.path}/{build.project_name}.{upload.extension}"
+
+#
+# joinfile
+#
+
+tools.joinfile.path={runtime.tools.joinfile.path}
+tools.joinfile.cmd=joinfile.py
+tools.joinfile.cmd.windows=joinfile.exe

@@ -28,6 +28,7 @@ manifest:
               name-allowlist:
                   - littlefs
                   - tinycrypt
+                  - tf-psa-crypto
                   - mbedtls
                   - segger
                   - thrift

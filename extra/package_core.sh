@@ -15,7 +15,7 @@ fi
 
 ARTIFACT=$1
 VERSION=$2
-OUTPUT_FILE=${3:-distrib/${ARTIFACT}-${VERSION}.tar.bz2}
+OUTPUT_FILE=${3:-distrib/${ARTIFACT}-${VERSION}.tar.gz}
 
 log_msg() {
 	if [ -n $GITHUB_WORKSPACE ] ; then
@@ -86,7 +86,7 @@ declutter_file extra/artifacts/_common.exc >> ${TEMP_EXC}
 declutter_file extra/artifacts/$ARTIFACT.exc >> ${TEMP_EXC}
 
 mkdir -p $(dirname ${OUTPUT_FILE})
-tar -cjhf ${OUTPUT_FILE} -X ${TEMP_EXC} -T ${TEMP_INC} \
+tar -czhf ${OUTPUT_FILE} -X ${TEMP_EXC} -T ${TEMP_INC} \
 	--transform "s,${TEMP_BOARDS},boards.txt," \
 	--transform "s,${TEMP_PLATFORM},platform.txt," \
 	--transform "s,^,ArduinoCore-zephyr/,"

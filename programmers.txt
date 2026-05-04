@@ -21,3 +21,12 @@ openocd.protocol=SWD
 openocd.program.tool=openocd
 openocd.program.tool.default=openocd
 openocd.program.extra_params=
+
+mcumgr-toolkit.name=mcumgr-toolkit
+mcumgr-toolkit.communication=serial
+mcumgr-toolkit.protocol=serial
+mcumgr-toolkit.program.protocol=serial
+mcumgr-toolkit.program.tool=mcumgr-toolkit
+mcumgr-toolkit.program.tool.default=mcumgr-toolkit
+mcumgr-toolkit.program.extra_params=
+mcumgr-toolkit.extra_params=

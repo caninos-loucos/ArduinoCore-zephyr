@@ -1,0 +1,5 @@
+{
+  "name": "Arduino Zephyr Puppy Boards",
+  "architecture": "zephyr_puppy",
+  "category": "Contributed"
+}

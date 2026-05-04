@@ -24,7 +24,7 @@ giga.build.zephyr_args=--shield arduino_giga_display_shield
 giga.build.zephyr_hals=hal_stm32 hal_infineon
 giga.build.variant=arduino_giga_r1_stm32h747xx_m7
 giga.build.artifact=zephyr_main
-giga.build.mcu=cortex-m7
+giga.build.mcu=-mcu=cortex-m7
 giga.build.fpu=-mfpu=fpv5-d16
 giga.build.architecture=cortex-m7
 
@@ -92,7 +92,7 @@ nano33ble.build.zephyr_args=
 nano33ble.build.zephyr_hals=hal_nordic
 nano33ble.build.artifact=zephyr_main
 nano33ble.build.variant=arduino_nano_33_ble_nrf52840_sense
-nano33ble.build.mcu=cortex-m4
+nano33ble.build.mcu=-mcu=cortex-m4
 nano33ble.build.fpu=-mfpu=fpv4-sp-d16
 nano33ble.build.architecture=cortex-m4
 
@@ -157,7 +157,7 @@ ek_ra8d1.build.zephyr_target=ek_ra8d1
 ek_ra8d1.build.zephyr_args=
 ek_ra8d1.build.zephyr_hals=hal_renesas
 ek_ra8d1.build.variant=ek_ra8d1_r7fa8d1bhecbd
-ek_ra8d1.build.mcu=cortex-m85+nomve
+ek_ra8d1.build.mcu=-mcu=cortex-m85+nomve
 ek_ra8d1.build.fpu=-mfpu=fpv5-d16
 ek_ra8d1.build.architecture=cortex-m85+nomve
 
@@ -216,7 +216,7 @@ frdm_mcxn947.build.zephyr_target=frdm_mcxn947//cpu0
 frdm_mcxn947.build.zephyr_args=
 frdm_mcxn947.build.zephyr_hals=hal_nxp
 frdm_mcxn947.build.variant=frdm_mcxn947_mcxn947_cpu0
-frdm_mcxn947.build.mcu=cortex-m33
+frdm_mcxn947.build.mcu=-mcu=cortex-m33
 frdm_mcxn947.build.fpu=-mfpu=fpv5-sp-d16
 frdm_mcxn947.build.architecture=cortex-m33
 
@@ -271,7 +271,7 @@ portentah7.build.zephyr_args=
 portentah7.build.zephyr_hals=hal_stm32 hal_infineon
 portentah7.build.artifact=zephyr_main
 portentah7.build.variant=arduino_portenta_h7_stm32h747xx_m7
-portentah7.build.mcu=cortex-m7
+portentah7.build.mcu=-mcu=cortex-m7
 portentah7.build.fpu=-mfpu=fpv5-d16
 portentah7.build.architecture=cortex-m7
 
@@ -338,7 +338,7 @@ frdm_rw612.build.zephyr_target=frdm_rw612
 frdm_rw612.build.zephyr_args=
 frdm_rw612.build.zephyr_hals=hal_stm32
 frdm_rw612.build.variant=frdm_rw612_rw612
-frdm_rw612.build.mcu=cortex-m33+nodsp
+frdm_rw612.build.mcu=-mcu=cortex-m33+nodsp
 frdm_rw612.build.fpu=-mfpu=fpv5-sp-d16
 frdm_rw612.build.architecture=cortex-m33+nodsp
 
@@ -388,7 +388,7 @@ niclasense.build.zephyr_args=
 niclasense.build.zephyr_hals=hal_nordic
 niclasense.build.artifact=zephyr_main
 niclasense.build.variant=arduino_nicla_sense_me_nrf52832
-niclasense.build.mcu=cortex-m4
+niclasense.build.mcu=-mcu=cortex-m4
 niclasense.build.fpu=-mfpu=fpv4-sp-d16
 niclasense.build.architecture=cortex-m4
 
@@ -457,7 +457,7 @@ portentac33.build.zephyr_args=
 portentac33.build.zephyr_hals=hal_renesas nanopb
 portentac33.build.artifact=zephyr_main
 portentac33.build.variant=arduino_portenta_c33_r7fa6m5bh3cfc
-portentac33.build.mcu=cortex-m33
+portentac33.build.mcu=-mcu=cortex-m33
 portentac33.build.fpu=-mfpu=fpv5-sp-d16
 portentac33.build.architecture=cortex-m33
 
@@ -514,7 +514,7 @@ opta.build.zephyr_args=
 opta.build.zephyr_hals=hal_stm32 hal_infineon
 opta.build.artifact=zephyr_main
 opta.build.variant=arduino_opta_stm32h747xx_m7
-opta.build.mcu=cortex-m7
+opta.build.mcu=-mcu=cortex-m7
 opta.build.fpu=-mfpu=fpv5-d16
 opta.build.architecture=cortex-m7
 
@@ -565,13 +565,14 @@ opta.debug.svd_file={runtime.platform.path}/svd/STM32H747_CM7.svd
 
 poodle.name=Poodle Toy v1
 poodle.build.core=arduino
+poodle.build.artifact=zephyr_puppy
 poodle.build.zephyr_hals=
-poodle.build.board=poodle-toy-v1
+poodle.build.board=poodle-toy-v1_puppy_v2
 poodle.build.zephyr_target=poodle-toy-v1_puppy_v2
 poodle.build.variant=poodle-toy-v1_puppy_v2
 
 poodle.build.architecture=rv32imfc_zicsr
-poodle.build.mcu=rv32imfc_zicsr
+poodle.build.mcu=-march=rv32imfc_zicsr
 poodle.build.abi=-mabi=ilp32
 poodle.build.fpu=
 poodle.build.float-abi=
@@ -579,8 +580,15 @@ poodle.build.crossprefix=riscv64-zephyr-elf-
 poodle.build.compiler_path={runtime.tools.riscv64-zephyr-elf-0.16.8.path}/bin/
 poodle.compiler.zephyr=
 
-#poodle.recipe.hooks.objcopy.postobjcopy.3.pattern=python3 "{runtime.platform.path}"/extra/binary_concatenate.py -a 0x2e000 -s 0x40000 -o "{build.path}/{build.project_name}-merged.bin" --file1 {runtime.platform.path}/firmwares/poodle-toy-v1_puppy_v2.bin --file2 "{build.path}/{build.project_name}.elf-zsk.bin"
+poodle.recipe.hooks.objcopy.postobjcopy.3.pattern=python3 {runtime.tools.joinfile.path}/{tools.joinfile.cmd} -a 0x2e000 -s 0x40000 -o "{build.path}/{build.project_name}-merged.bin" --file1 {runtime.platform.path}/firmwares/zephyr-poodle-toy-v1_puppy_v2.bin --file2 "{build.path}/{build.project_name}.elf-zsk.bin"
+poodle.recipe.hooks.objcopy.postobjcopy.3.pattern.windows={runtime.tools.joinfile.path}/joinfile.exe -a 0x2e000 -s 0x40000 -o "{build.path}/{build.project_name}-merged.bin" --file1 {runtime.platform.path}/firmwares/zephyr-poodle-toy-v1_puppy_v2.bin --file2 "{build.path}/{build.project_name}.elf-zsk.bin"
 
+poodle.recipe.hooks.objcopy.postobjcopy.4.pattern={runtime.tools.imgtool.path}/imgtool create -v0.0.3 --align 1 -H0x200 -L0x1c010000 -S0x40000 "{build.path}/{build.project_name}-merged.bin" "{build.path}/{build.project_name}.{upload.extension}"
+#poodle.recipe.hooks.objcopy.postobjcopy.4.pattern.windows={runtime.tools.imgtool.path}/imgtool.exe create -v0.0.3 --align 1 -H0x200 -L0x1c010000 -S0x40000 "{build.path}/{build.project_name}-merged.bin" "{build.path}/{build.project_name}.{upload.extension}"
+
+poodle.upload.tool=mcumgr-toolkit
+poodle.upload.tool.default=mcumgr-toolkit
+poodle.upload.protocol=serial
 
 ##########################################################################################
 
@@ -599,7 +607,7 @@ nano_matter.build.zephyr_args=
 nano_matter.build.zephyr_hals=hal_silabs
 nano_matter.build.artifact=zephyr_main
 nano_matter.build.variant=arduino_nano_matter_mgm240sd22vna
-nano_matter.build.mcu=cortex-m33
+nano_matter.build.mcu=-mcu=cortex-m33
 nano_matter.build.fpu=-mfpu=fpv4-sp-d16
 nano_matter.build.architecture=cortex-m33
 
@@ -672,7 +680,7 @@ unoq.build.zephyr_args=
 unoq.build.variant=arduino_uno_q_stm32u585xx
 unoq.build.artifact=zephyr_unoq
 unoq.build.subarch=zephyr
-unoq.build.mcu=cortex-m33
+unoq.build.mcu=-mcu=cortex-m33
 unoq.build.fpu=-mfpu=fpv5-sp-d16
 unoq.build.architecture=cortex-m33
 unoq.compiler.zephyr.arch.define=
