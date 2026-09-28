@@ -3,8 +3,8 @@
 # For more info:
 # https://github.com/arduino/Arduino/wiki/Arduino-IDE-1.5---3rd-party-Hardware-specification
 
-name=Arduino Zephyr Boards (BETA)
-version=9.9.9
+name=Arduino Zephyr Boards Puppy
+version=0.98.0
 
 # Compile variables
 # ------------------------

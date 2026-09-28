@@ -1,0 +1,61 @@
+/delete-node/ &flash0;
+
+/ {
+	zephyr,user {
+		digital-pin-gpios =	<&arduino_header 6 GPIO_ACTIVE_HIGH>,
+						<&arduino_header 7 GPIO_ACTIVE_HIGH>,
+						<&arduino_header 8 GPIO_ACTIVE_HIGH>,
+						<&arduino_header 9 GPIO_ACTIVE_HIGH>,
+						<&arduino_header 10 GPIO_ACTIVE_HIGH>,
+						<&arduino_header 11 GPIO_ACTIVE_HIGH>,
+						<&arduino_header 12 GPIO_ACTIVE_HIGH>,
+						<&arduino_header 13 GPIO_ACTIVE_HIGH>,
+						<&arduino_header 14 GPIO_ACTIVE_HIGH>,
+						<&arduino_header 15 GPIO_ACTIVE_HIGH>,
+						<&arduino_header 16 GPIO_ACTIVE_HIGH>,
+						<&arduino_header 17 GPIO_ACTIVE_HIGH>,
+						<&arduino_header 18 GPIO_ACTIVE_HIGH>,
+						<&arduino_header 19 GPIO_ACTIVE_HIGH>,
+						<&arduino_header 20 GPIO_ACTIVE_HIGH>,
+						<&arduino_header 21 GPIO_ACTIVE_HIGH>,
+						<&gpio0 23 GPIO_ACTIVE_HIGH>;
+
+		serials = <&uart0>;
+		i2cs = <&i2c0>;
+		spis = <&spi0>;
+        pwms = <&pwm2 0 10000000 0>;
+        pwm-pin-gpios = <&arduino_header 14 GPIO_ACTIVE_HIGH>;
+	};
+};
+
+&spi0 {
+    flash0: flash@0 {
+        compatible = "jedec,spi-nor";
+        reg = <0>;
+        spi-max-frequency = <20000000>;
+        size = <DT_SIZE_M(8)>;
+        status = "okay";
+
+        partitions {
+            compatible = "fixed-partitions";
+            #size-cells = <1>;
+            #address-cells = <1>;
+
+            boot_partition: partition@0 {
+                reg = <0 0x20000>;
+                label = "boot_partition";
+                read-only;
+            };
+
+            slot0_partition: partition@20000 {
+                reg = <0x20000 0x2E000>;
+                label = "slot0";
+            };
+
+            user_sketch: partition@4E000 {
+                reg = <0x4E000 0x12000>;
+				label = "user_sketch";
+            };
+        };
+    };
+};

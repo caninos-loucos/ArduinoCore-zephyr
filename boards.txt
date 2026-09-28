@@ -561,34 +561,63 @@ opta.debug.server.openocd.scripts.2=target/stm32h7x_dual_bank.cfg
 opta.debug.cortex-debug.custom.request=attach
 opta.debug.svd_file={runtime.platform.path}/svd/STM32H747_CM7.svd
 
-##########################################################################################
+################################################################################
 
-poodle.name=Poodle Toy v1
-poodle.build.core=arduino
-poodle.build.artifact=zephyr_puppy
-poodle.build.zephyr_hals=
-poodle.build.board=poodle-toy-v1_puppy_v2
-poodle.build.zephyr_target=poodle-toy-v1_puppy_v2
-poodle.build.variant=poodle-toy-v1_puppy_v2
+poodle1.name=Poodle Toy v1
+poodle1.build.core=arduino
+poodle1.build.artifact=zephyr_puppy
+poodle1.build.zephyr_hals=
+poodle1.build.board=poodle-toy-v1_puppy_v2
+poodle1.build.zephyr_target=poodle-toy-v1_puppy_v2
+poodle1.build.variant=poodle-toy-v1_puppy_v2
 
-poodle.build.architecture=rv32imfc_zicsr
-poodle.build.mcu=-march=rv32imfc_zicsr
-poodle.build.abi=-mabi=ilp32
-poodle.build.fpu=
-poodle.build.float-abi=
-poodle.build.crossprefix=riscv64-zephyr-elf-
-poodle.build.compiler_path={runtime.tools.riscv64-zephyr-elf-0.16.8.path}/bin/
-poodle.compiler.zephyr=
+poodle1.build.architecture=rv32imfc_zicsr
+poodle1.build.mcu=-march=rv32imfc_zicsr
+poodle1.build.abi=-mabi=ilp32
+poodle1.build.fpu=
+poodle1.build.float-abi=
+poodle1.build.crossprefix=riscv64-zephyr-elf-
+poodle1.build.compiler_path={runtime.tools.riscv64-zephyr-elf-0.16.8.path}/bin/
+poodle1.compiler.zephyr=
 
-poodle.recipe.hooks.objcopy.postobjcopy.3.pattern=python3 {runtime.tools.joinfile.path}/{tools.joinfile.cmd} -a 0x2e000 -s 0x40000 -o "{build.path}/{build.project_name}-merged.bin" --file1 {runtime.platform.path}/firmwares/zephyr-poodle-toy-v1_puppy_v2.bin --file2 "{build.path}/{build.project_name}.elf-zsk.bin"
-poodle.recipe.hooks.objcopy.postobjcopy.3.pattern.windows={runtime.tools.joinfile.path}/joinfile.exe -a 0x2e000 -s 0x40000 -o "{build.path}/{build.project_name}-merged.bin" --file1 {runtime.platform.path}/firmwares/zephyr-poodle-toy-v1_puppy_v2.bin --file2 "{build.path}/{build.project_name}.elf-zsk.bin"
+poodle1.recipe.hooks.objcopy.postobjcopy.3.pattern=python3 {runtime.tools.joinfile.path}/{tools.joinfile.cmd} -a 0x2e000 -s 0x40000 -o "{build.path}/{build.project_name}-merged.bin" --file1 {runtime.platform.path}/firmwares/zephyr-poodle-toy-v1_puppy_v2.bin --file2 "{build.path}/{build.project_name}.elf-zsk.bin"
+poodle1.recipe.hooks.objcopy.postobjcopy.3.pattern.windows={runtime.tools.joinfile.path}/joinfile.exe -a 0x2e000 -s 0x40000 -o "{build.path}/{build.project_name}-merged.bin" --file1 {runtime.platform.path}/firmwares/zephyr-poodle-toy-v1_puppy_v2.bin --file2 "{build.path}/{build.project_name}.elf-zsk.bin"
 
-poodle.recipe.hooks.objcopy.postobjcopy.4.pattern={runtime.tools.imgtool.path}/imgtool create -v0.0.3 --align 1 -H0x200 -L0x1c010000 -S0x40000 "{build.path}/{build.project_name}-merged.bin" "{build.path}/{build.project_name}.{upload.extension}"
-#poodle.recipe.hooks.objcopy.postobjcopy.4.pattern.windows={runtime.tools.imgtool.path}/imgtool.exe create -v0.0.3 --align 1 -H0x200 -L0x1c010000 -S0x40000 "{build.path}/{build.project_name}-merged.bin" "{build.path}/{build.project_name}.{upload.extension}"
+poodle1.recipe.hooks.objcopy.postobjcopy.4.pattern={runtime.tools.imgtool.path}/imgtool create -v0.0.3 --align 1 -H0x200 -L0x1c010000 -S0x40000 "{build.path}/{build.project_name}-merged.bin" "{build.path}/{build.project_name}.{upload.extension}"
+#poodle1.recipe.hooks.objcopy.postobjcopy.4.pattern.windows={runtime.tools.imgtool.path}/imgtool.exe create -v0.0.3 --align 1 -H0x200 -L0x1c010000 -S0x40000 "{build.path}/{build.project_name}-merged.bin" "{build.path}/{build.project_name}.{upload.extension}"
 
-poodle.upload.tool=mcumgr-toolkit
-poodle.upload.tool.default=mcumgr-toolkit
-poodle.upload.protocol=serial
+poodle1.upload.tool=mcumgr-toolkit
+poodle1.upload.tool.default=mcumgr-toolkit
+poodle1.upload.protocol=serial
+
+################################################################################
+
+poodle2.name=Poodle Toy v2
+poodle2.build.core=arduino
+poodle2.build.artifact=zephyr_puppy
+poodle2.build.zephyr_hals=
+poodle2.build.board=poodle-toy-v2_puppy_v1
+poodle2.build.zephyr_target=poodle-toy-v2_puppy_v1
+poodle2.build.variant=poodle-toy-v2_puppy_v1
+
+poodle2.build.architecture=rv32imfc_zicsr
+poodle2.build.mcu=-march=rv32imfc_zicsr
+poodle2.build.abi=-mabi=ilp32
+poodle2.build.fpu=
+poodle2.build.float-abi=
+poodle2.build.crossprefix=riscv64-zephyr-elf-
+poodle2.build.compiler_path={runtime.tools.riscv64-zephyr-elf-0.16.8.path}/bin/
+poodle2.compiler.zephyr=
+
+poodle2.recipe.hooks.objcopy.postobjcopy.3.pattern=python3 {runtime.tools.joinfile.path}/{tools.joinfile.cmd} -a 0x2e000 -s 0x40000 -o "{build.path}/{build.project_name}-merged.bin" --file1 {runtime.platform.path}/firmwares/zephyr-poodle-toy-v2_puppy_v1.bin --file2 "{build.path}/{build.project_name}.elf-zsk.bin"
+poodle2.recipe.hooks.objcopy.postobjcopy.3.pattern.windows={runtime.tools.joinfile.path}/joinfile.exe -a 0x2e000 -s 0x40000 -o "{build.path}/{build.project_name}-merged.bin" --file1 {runtime.platform.path}/firmwares/zephyr-poodle-toy-v2_puppy_v1.bin --file2 "{build.path}/{build.project_name}.elf-zsk.bin"
+
+poodle2.recipe.hooks.objcopy.postobjcopy.4.pattern={runtime.tools.imgtool.path}/imgtool create -v0.0.3 --align 1 -H0x200 -L0x1c010000 -S0x40000 "{build.path}/{build.project_name}-merged.bin" "{build.path}/{build.project_name}.{upload.extension}"
+#poodle2.recipe.hooks.objcopy.postobjcopy.4.pattern.windows={runtime.tools.imgtool.path}/imgtool.exe create -v0.0.3 --align 1 -H0x200 -L0x1c010000 -S0x40000 "{build.path}/{build.project_name}-merged.bin" "{build.path}/{build.project_name}.{upload.extension}"
+
+poodle2.upload.tool=mcumgr-toolkit
+poodle2.upload.tool.default=mcumgr-toolkit
+poodle2.upload.protocol=serial
 
 ##########################################################################################
 
