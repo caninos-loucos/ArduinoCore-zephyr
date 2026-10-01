@@ -359,7 +359,7 @@ tools.mcumgr-toolkit.cmd.windows=mcumgrctl.exe
 tools.mcumgr-toolkit.upload.protocol=serial
 tools.mcumgr-toolkit.upload.params.verbose=
 tools.mcumgr-toolkit.upload.params.quiet=
-tools.mcumgr-toolkit.upload.pattern="{path}/{cmd}" -s {serial.port} image upload "{build.path}/{build.project_name}.{upload.extension}"
+tools.mcumgr-toolkit.upload.pattern="{path}/{cmd}" -s {serial.port} image upload "{build.path}/{build.project_name}.{upload.extension}" --timeout 2000
 
 #
 # joinfile

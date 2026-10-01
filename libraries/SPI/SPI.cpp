@@ -105,7 +105,6 @@ void arduino::ZephyrSPI::beginTransaction(SPISettings settings) {
 }
 
 void arduino::ZephyrSPI::endTransaction(void) {
-	spi_release(spi_dev, &config);
 }
 
 void arduino::ZephyrSPI::attachInterrupt() {

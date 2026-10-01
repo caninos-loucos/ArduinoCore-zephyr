@@ -23,8 +23,18 @@
 		serials = <&uart0>;
 		i2cs = <&i2c0>;
 		spis = <&spi0>;
-        pwms = <&pwm2 0 10000000 0>;
-        pwm-pin-gpios = <&arduino_header 14 GPIO_ACTIVE_HIGH>;
+        pwms = <&pwm1 0 10000000 0>,
+                <&pwm1 1 10000000 0>,
+                <&pwm1 2 10000000 0>,
+                <&pwm1 3 10000000 0>,
+                <&pwm2 0 10000000 0>,
+                <&pwm2 1 10000000 0>;
+        pwm-pin-gpios = <&arduino_header 9 GPIO_ACTIVE_HIGH>,
+                        <&arduino_header 11 GPIO_ACTIVE_HIGH>,
+                        <&arduino_header 12 GPIO_ACTIVE_HIGH>,
+                        <&arduino_header 13 GPIO_ACTIVE_HIGH>,
+                        <&arduino_header 14 GPIO_ACTIVE_HIGH>,
+                        <&arduino_header 15 GPIO_ACTIVE_HIGH>;
 	};
 };
 
@@ -55,6 +65,11 @@
             user_sketch: partition@4E000 {
                 reg = <0x4E000 0x12000>;
 				label = "user_sketch";
+            };
+
+            storage_partition: partition@60000 {
+                reg = <0x60000 0x20000>;
+                label = "storage";
             };
         };
     };
