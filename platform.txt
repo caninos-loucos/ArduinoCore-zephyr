@@ -84,7 +84,7 @@ build.zsk_args.startup-mode-immediate=-immediate
 compiler.c.extra_flags=
 compiler.c.elf.extra_flags=
 compiler.S.extra_flags=
-compiler.cpp.extra_flags=
+compiler.cpp.extra_flags=-Wno-register
 compiler.ar.extra_flags=
 compiler.objcopy.eep.extra_flags=
 compiler.elf2hex.extra_flags=
@@ -123,7 +123,7 @@ recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} {compil
 recipe.c.combine.1.pattern={build.check_command-{build.link_mode}}
 recipe.c.combine.2.pattern={build.combine_command}
 recipe.c.combine.pattern={build.combine_command}
-recipe.hooks.linking.postlink.1.pattern="{compiler.path}{build.crossprefix}strip" --strip-debug "{build.path}/{build.project_name}_debug.elf" -o "{build.path}/{build.project_name}.elf"
+recipe.hooks.linking.postlink.1.pattern="{compiler.path}{build.crossprefix}strip" --strip-unneeded "{build.path}/{build.project_name}_debug.elf" -o "{build.path}/{build.project_name}.elf"
 
 ## Create eeprom
 recipe.objcopy.eep.pattern=
