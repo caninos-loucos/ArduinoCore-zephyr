@@ -6,7 +6,6 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 
 project(app LANGUAGES C CXX)
 
-test_sysbuild()
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/blobs)
 
 # Memory region relocation based on Kconfig
