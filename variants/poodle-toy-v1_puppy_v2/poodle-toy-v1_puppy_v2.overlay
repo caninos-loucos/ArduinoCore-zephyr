@@ -24,12 +24,13 @@
 		i2cs = <&i2c0>;
 		spis = <&spi0>;
 
-        pwms = <&pwm1 0 10000000 0>,
-                <&pwm1 1 10000000 0>,
-                <&pwm1 2 10000000 0>,
-                <&pwm1 3 10000000 0>,
-                <&pwm2 0 10000000 0>,
-                <&pwm2 1 10000000 0>;
+        pwms =  <&pwm1 0 PWM_HZ(490) PWM_POLARITY_NORMAL>,
+                <&pwm1 1 PWM_HZ(490) PWM_POLARITY_NORMAL>,
+                <&pwm1 2 PWM_HZ(490) PWM_POLARITY_NORMAL>,
+                <&pwm1 3 PWM_HZ(490) PWM_POLARITY_NORMAL>,
+                <&pwm2 0 PWM_HZ(490) PWM_POLARITY_NORMAL>,
+                <&pwm2 1 PWM_HZ(490) PWM_POLARITY_NORMAL>;
+
         pwm-pin-gpios = <&arduino_header 9 GPIO_ACTIVE_HIGH>,
                         <&arduino_header 11 GPIO_ACTIVE_HIGH>,
                         <&arduino_header 12 GPIO_ACTIVE_HIGH>,

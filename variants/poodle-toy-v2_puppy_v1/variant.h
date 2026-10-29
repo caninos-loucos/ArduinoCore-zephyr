@@ -5,3 +5,4 @@
  */
 
 #include "pins_arduino.h"
+#include "wiring_private.h"
