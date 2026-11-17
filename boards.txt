@@ -581,8 +581,10 @@ poodle1.build.compiler_path={runtime.tools.riscv64-zephyr-elf-0.16.8.path}/bin/
 poodle1.compiler.zephyr=
 
 poodle1.recipe.hooks.objcopy.postobjcopy.3.pattern=python3 {tools.joinfile.path}/{tools.joinfile.cmd} -a 0x2c000 -s 0x40000 -o "{build.path}/{build.project_name}-merged.bin" --file1 {runtime.platform.path}/firmwares/zephyr-poodle-toy-v1_puppy_v2.bin --file2 "{build.path}/{build.project_name}.elf-zsk.bin"
+
 poodle1.recipe.hooks.objcopy.postobjcopy.3.pattern.windows={tools.joinfile.path}/joinfile.exe -a 0x2c000 -s 0x40000 -o "{build.path}/{build.project_name}-merged.bin" --file1 {runtime.platform.path}/firmwares/zephyr-poodle-toy-v1_puppy_v2.bin --file2 "{build.path}/{build.project_name}.elf-zsk.bin"
-poodle1.recipe.hooks.objcopy.postobjcopy.4.pattern={tools.imgtool.path}/{tools.imgtool.cmd} create -v0.0.3 --align 1 -H0x200 -L0x1c010000 -S0x40000 "{build.path}/{build.project_name}-merged.bin" "{build.path}/{build.project_name}.{upload.extension}"
+
+poodle1.recipe.hooks.objcopy.postobjcopy.4.pattern={tools.imgtool.path}/{tools.imgtool.cmd} create -v0.0.5 --align 1 -H0x200 -L0x1c010000 -S0x40000 "{build.path}/{build.project_name}-merged.bin" "{build.path}/{build.project_name}.{upload.extension}"
 
 poodle1.upload.tool=mcumgr-toolkit
 poodle1.upload.tool.default=mcumgr-toolkit
@@ -608,8 +610,10 @@ poodle2.build.compiler_path={runtime.tools.riscv64-zephyr-elf-0.16.8.path}/bin/
 poodle2.compiler.zephyr=
 
 poodle2.recipe.hooks.objcopy.postobjcopy.3.pattern=python3 {tools.joinfile.path}/{tools.joinfile.cmd} -a 0x2c000 -s 0x40000 -o "{build.path}/{build.project_name}-merged.bin" --file1 {runtime.platform.path}/firmwares/zephyr-poodle-toy-v2_puppy_v1.bin --file2 "{build.path}/{build.project_name}.elf-zsk.bin"
+
 poodle2.recipe.hooks.objcopy.postobjcopy.3.pattern.windows={tools.joinfile.path}/joinfile.exe -a 0x2c000 -s 0x40000 -o "{build.path}/{build.project_name}-merged.bin" --file1 {runtime.platform.path}/firmwares/zephyr-poodle-toy-v2_puppy_v1.bin --file2 "{build.path}/{build.project_name}.elf-zsk.bin"
-poodle2.recipe.hooks.objcopy.postobjcopy.4.pattern={tools.imgtool.path}/{tools.imgtool.cmd} create -v0.0.3 --align 1 -H0x200 -L0x1c010000 -S0x40000 "{build.path}/{build.project_name}-merged.bin" "{build.path}/{build.project_name}.{upload.extension}"
+
+poodle2.recipe.hooks.objcopy.postobjcopy.4.pattern={tools.imgtool.path}/{tools.imgtool.cmd} create -v0.0.5 --align 1 -H0x200 -L0x1c010000 -S0x40000 "{build.path}/{build.project_name}-merged.bin" "{build.path}/{build.project_name}.{upload.extension}"
 
 poodle2.upload.tool=mcumgr-toolkit
 poodle2.upload.tool.default=mcumgr-toolkit

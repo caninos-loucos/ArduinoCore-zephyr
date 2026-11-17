@@ -253,6 +253,7 @@ tools.picotool.upload.pattern="{path}/{cmd}" {upload.verbose} -D "{build.path}/{
 
 tools.imgtool.path={runtime.tools.imgtool.path}
 tools.imgtool.cmd=imgtool
+tools.imgtool.cmd.macosx=imgtool-macos-arm
 tools.imgtool.flags=sign --key "{build.keys.keychain}/{build.keys.sign_key}" --encrypt "{build.keys.keychain}/{build.keys.encrypt_key}" "{build.path}/{build.project_name}.bin" "{build.path}/{build.project_name}.bin" --align {build.alignment} --max-align {build.alignment} --version {build.version} --header-size {build.header_size} --pad-header --slot-size {build.slot_size}
 
 #
@@ -356,6 +357,7 @@ debug.server.openocd.scripts_dir={runtime.tools.openocd-0.12.0-arduino1-static.p
 tools.mcumgr-toolkit.path={runtime.tools.mcumgr-toolkit.path}
 tools.mcumgr-toolkit.cmd=mcumgrctl
 tools.mcumgr-toolkit.cmd.windows=mcumgrctl.exe
+tools.mcumgr-toolkit.cmd.macosx=mcumgrctl-macos
 tools.mcumgr-toolkit.upload.protocol=serial
 tools.mcumgr-toolkit.upload.params.verbose=
 tools.mcumgr-toolkit.upload.params.quiet=
